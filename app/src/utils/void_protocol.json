@@ -1,0 +1,490 @@
+{
+  "address": "9wPskrpZiLSb3He3QoLZMEeiBKWJUh7ykGtkb2N7HX9H",
+  "metadata": {
+    "name": "void_protocol",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "create_organization",
+      "docs": [
+        "Create a new organization drop box.",
+        "The org admin provides a name, description, URL slug, and their ECDH public",
+        "key. Anyone can encrypt messages to this public key, but only the admin",
+        "(who holds the private key) can decrypt them."
+      ],
+      "discriminator": [
+        60,
+        173,
+        177,
+        39,
+        122,
+        23,
+        68,
+        185
+      ],
+      "accounts": [
+        {
+          "name": "organization",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  103
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "slug"
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "encryption_key",
+          "type": {
+            "array": [
+              "u8",
+              65
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create_proof",
+      "docs": [
+        "Store a SHA-256 hash on-chain as proof that a file existed at this moment.",
+        "The hash is used as a PDA seed, so each hash can only be registered once."
+      ],
+      "discriminator": [
+        153,
+        56,
+        206,
+        152,
+        237,
+        25,
+        106,
+        154
+      ],
+      "accounts": [
+        {
+          "name": "proof",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  111,
+                  102
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "deactivate_organization",
+      "docs": [
+        "Deactivate an organization (admin only). Prevents new submissions."
+      ],
+      "discriminator": [
+        56,
+        161,
+        52,
+        255,
+        157,
+        106,
+        158,
+        233
+      ],
+      "accounts": [
+        {
+          "name": "organization",
+          "writable": true
+        },
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "organization"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "submit_tip",
+      "docs": [
+        "Submit an encrypted tip to an organization.",
+        "The arweave_hash points to the encrypted payload stored on Arweave.",
+        "The submitter can be a throwaway wallet or our backend wallet (for anonymous subs)."
+      ],
+      "discriminator": [
+        223,
+        59,
+        46,
+        101,
+        161,
+        189,
+        154,
+        37
+      ],
+      "accounts": [
+        {
+          "name": "submission",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "organization"
+              },
+              {
+                "kind": "account",
+                "path": "organization.submission_count",
+                "account": "Organization"
+              }
+            ]
+          }
+        },
+        {
+          "name": "organization",
+          "writable": true
+        },
+        {
+          "name": "submitter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "arweave_hash",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Organization",
+      "discriminator": [
+        145,
+        38,
+        152,
+        251,
+        91,
+        57,
+        118,
+        160
+      ]
+    },
+    {
+      "name": "Proof",
+      "discriminator": [
+        163,
+        35,
+        13,
+        71,
+        15,
+        128,
+        63,
+        82
+      ]
+    },
+    {
+      "name": "Submission",
+      "discriminator": [
+        58,
+        194,
+        159,
+        158,
+        75,
+        102,
+        178,
+        197
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "SlugTooLong",
+      "msg": "Organization slug too long (max 32 chars)"
+    },
+    {
+      "code": 6001,
+      "name": "NameTooLong",
+      "msg": "Organization name too long (max 64 chars)"
+    },
+    {
+      "code": 6002,
+      "name": "DescriptionTooLong",
+      "msg": "Organization description too long (max 256 chars)"
+    },
+    {
+      "code": 6003,
+      "name": "SlugEmpty",
+      "msg": "Slug cannot be empty"
+    },
+    {
+      "code": 6004,
+      "name": "ArweaveHashTooLong",
+      "msg": "Arweave hash too long (max 64 chars)"
+    },
+    {
+      "code": 6005,
+      "name": "OrgInactive",
+      "msg": "Organization is inactive"
+    }
+  ],
+  "types": [
+    {
+      "name": "Organization",
+      "docs": [
+        "Organization drop box. Stores the org's public encryption key so anyone",
+        "can encrypt messages to it.",
+        "Size: 8 + (4+32) + (4+64) + (4+256) + 65 + 32 + 8 + 8 + 1 + 1 = 487 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "slug",
+            "docs": [
+              "URL slug (e.g. \"washington-post\")"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "docs": [
+              "Display name"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "docs": [
+              "What kind of tips they accept"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "encryption_key",
+            "docs": [
+              "ECDH P-256 uncompressed public key (65 bytes: 0x04 + 32 x + 32 y)"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                65
+              ]
+            }
+          },
+          {
+            "name": "admin",
+            "docs": [
+              "Wallet that controls this org"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "submission_count",
+            "docs": [
+              "How many submissions received"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "When the org was created"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "active",
+            "docs": [
+              "Whether org is accepting submissions"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Proof",
+      "docs": [
+        "Account that stores a single proof of existence.",
+        "Size: 8 (discriminator) + 32 (hash) + 32 (owner pubkey) + 8 (timestamp) + 1 (bump) = 81 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Submission",
+      "docs": [
+        "A submission reference. The actual encrypted content lives on Arweave;",
+        "this just records the pointer and metadata on-chain.",
+        "Size: 8 + 8 + 32 + (4+64) + 32 + 8 + 1 = 157 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "docs": [
+              "Sequential ID within the org"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "organization",
+            "docs": [
+              "The organization this was submitted to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "arweave_hash",
+            "docs": [
+              "Arweave transaction hash where encrypted content is stored"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "submitter",
+            "docs": [
+              "Who submitted (can be throwaway wallet)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "When submitted"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
