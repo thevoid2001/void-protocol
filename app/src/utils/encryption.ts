@@ -208,3 +208,128 @@ export function unpackPayload(packed: Uint8Array): EncryptedPayload {
   };
 }
 
+// ─── VOID BURN: Signature-derived encryption keys ─────────────────
+
+/**
+ * The fixed message users sign to derive their encryption keypair.
+ * Using a specific message ensures deterministic key derivation.
+ */
+export const VOID_BURN_SIGN_MESSAGE = "Void Protocol: Activate encrypted inbox";
+
+/**
+ * Derive an ECDH keypair from a wallet signature.
+ * The signature is hashed to create 32 bytes of entropy, which seeds the key derivation.
+ * Signing the same message always produces the same keypair.
+ */
+export async function deriveEncryptionKeyPair(
+  signature: Uint8Array,
+): Promise<{ publicKey: Uint8Array; privateKeyJwk: JsonWebKey }> {
+  // Hash the signature to get 32 bytes of deterministic entropy
+  const entropy = await crypto.subtle.digest("SHA-256", signature);
+
+  // Import the entropy as raw key material for HKDF
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    entropy,
+    "HKDF",
+    false,
+    ["deriveBits"],
+  );
+
+  // Derive 32 bytes for the private key scalar
+  // Using HKDF with a fixed salt and info ensures determinism
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: "HKDF",
+      hash: "SHA-256",
+      salt: new TextEncoder().encode("void-burn-inbox-key"),
+      info: new TextEncoder().encode("ecdh-p256-private"),
+    },
+    keyMaterial,
+    256,
+  );
+
+  // Convert to JWK format for P-256
+  // The derived bits become the 'd' parameter (private key scalar)
+  const dBytes = new Uint8Array(derivedBits);
+  const dBase64 = base64UrlEncode(dBytes);
+
+  // We need to compute the public key point from the private scalar
+  // P-256 requires deriving G * d, but WebCrypto doesn't expose scalar multiplication
+  // Instead, we import as JWK and re-export to get the computed public key
+
+  // First, generate a dummy keypair to get the right structure
+  const tempKeyPair = await crypto.subtle.generateKey(
+    { name: "ECDH", namedCurve: "P-256" },
+    true,
+    ["deriveKey"],
+  );
+  const tempJwk = await crypto.subtle.exportKey("jwk", tempKeyPair.privateKey);
+
+  // Replace 'd' with our derived value
+  tempJwk.d = dBase64;
+
+  // Import with our derived 'd' - WebCrypto will compute x,y from it
+  // Note: This may fail if the derived scalar is invalid (very rare edge case)
+  let privateKey: CryptoKey;
+  try {
+    privateKey = await crypto.subtle.importKey(
+      "jwk",
+      tempJwk,
+      { name: "ECDH", namedCurve: "P-256" },
+      true,
+      ["deriveKey"],
+    );
+  } catch {
+    // If the scalar is invalid, hash it again to get a valid one
+    const retryEntropy = await crypto.subtle.digest("SHA-256", derivedBits);
+    const retryDBytes = new Uint8Array(retryEntropy);
+    tempJwk.d = base64UrlEncode(retryDBytes);
+    privateKey = await crypto.subtle.importKey(
+      "jwk",
+      tempJwk,
+      { name: "ECDH", namedCurve: "P-256" },
+      true,
+      ["deriveKey"],
+    );
+  }
+
+  // Export the final keypair
+  const privateKeyJwk = await crypto.subtle.exportKey("jwk", privateKey);
+  const publicKeyRaw = await crypto.subtle.exportKey("raw", privateKey);
+
+  return {
+    publicKey: new Uint8Array(publicKeyRaw),
+    privateKeyJwk,
+  };
+}
+
+/**
+ * Encrypt a message for a recipient using their public key.
+ * Same as encryptForOrg but named for clarity in Void Burn context.
+ */
+export async function encryptForRecipient(
+  data: Uint8Array,
+  recipientPublicKey: Uint8Array,
+): Promise<EncryptedPayload> {
+  return encryptForOrg(data, recipientPublicKey);
+}
+
+/**
+ * Decrypt a message using a signature-derived private key.
+ * Same as decryptSubmission but named for clarity in Void Burn context.
+ */
+export async function decryptWithDerivedKey(
+  payload: EncryptedPayload,
+  privateKeyJwk: JsonWebKey,
+): Promise<Uint8Array> {
+  return decryptSubmission(payload, privateKeyJwk);
+}
+
+/** Base64url encoding for JWK compatibility */
+function base64UrlEncode(bytes: Uint8Array): string {
+  const binString = Array.from(bytes, (x) => String.fromCharCode(x)).join("");
+  const base64 = btoa(binString);
+  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+}
+

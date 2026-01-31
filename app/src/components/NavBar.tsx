@@ -28,6 +28,9 @@ export function NavBar() {
           <Link to="/drop" className={`text-sm transition ${isActive("/drop")}`}>
             Drop
           </Link>
+          <Link to="/burn" className={`text-sm transition ${isActive("/burn")}`}>
+            Burn
+          </Link>
           <WalletMultiButton />
         </div>
       </div>

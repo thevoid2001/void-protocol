@@ -86,6 +86,58 @@ pub mod void_protocol {
         ctx.accounts.organization.active = false;
         Ok(())
     }
+
+    // ─── VOID BURN ───────────────────────────────────────────────
+
+    /// Activate an inbox for wallet-to-wallet encrypted messaging.
+    /// The user provides their derived encryption public key (65 bytes).
+    /// This key is derived client-side from a wallet signature.
+    pub fn activate_inbox(
+        ctx: Context<ActivateInbox>,
+        encryption_key: [u8; 65],
+    ) -> Result<()> {
+        let inbox = &mut ctx.accounts.inbox;
+        inbox.owner = ctx.accounts.owner.key();
+        inbox.encryption_key = encryption_key;
+        inbox.message_count = 0;
+        inbox.created_at = Clock::get()?.unix_timestamp;
+        inbox.bump = ctx.bumps.inbox;
+        Ok(())
+    }
+
+    /// Send an encrypted direct message to another wallet.
+    /// Recipient must have an activated inbox.
+    pub fn send_direct_message(
+        ctx: Context<SendDirectMessage>,
+        arweave_hash: String,
+        burn_after_reading: bool,
+    ) -> Result<()> {
+        require!(arweave_hash.len() <= MAX_ARWEAVE_HASH_LEN, VoidError::ArweaveHashTooLong);
+
+        let recipient_inbox = &mut ctx.accounts.recipient_inbox;
+        let message_id = recipient_inbox.message_count;
+        recipient_inbox.message_count += 1;
+
+        let msg = &mut ctx.accounts.message;
+        msg.id = message_id;
+        msg.sender = ctx.accounts.sender.key();
+        msg.recipient = recipient_inbox.owner;
+        msg.arweave_hash = arweave_hash;
+        msg.burn_after_reading = burn_after_reading;
+        msg.burned = false;
+        msg.timestamp = Clock::get()?.unix_timestamp;
+        msg.bump = ctx.bumps.message;
+        Ok(())
+    }
+
+    /// Mark a message as burned (recipient only).
+    /// Once burned, the message reference is flagged and cannot be "unburned".
+    pub fn burn_message(ctx: Context<BurnMessage>) -> Result<()> {
+        let msg = &mut ctx.accounts.message;
+        require!(!msg.burned, VoidError::AlreadyBurned);
+        msg.burned = true;
+        Ok(())
+    }
 }
 
 // ─── ERRORS ─────────────────────────────────────────────────────
@@ -104,6 +156,8 @@ pub enum VoidError {
     ArweaveHashTooLong,
     #[msg("Organization is inactive")]
     OrgInactive,
+    #[msg("Message has already been burned")]
+    AlreadyBurned,
 }
 
 // ─── VOID STAMP ACCOUNTS ────────────────────────────────────────
@@ -229,4 +283,93 @@ pub struct DeactivateOrganization<'info> {
     pub organization: Account<'info, Organization>,
 
     pub admin: Signer<'info>,
+}
+
+// ─── VOID BURN ACCOUNTS ────────────────────────────────────────
+
+/// A user's inbox for receiving encrypted direct messages.
+/// The encryption key is derived client-side from a wallet signature.
+/// Size: 8 + 32 + 65 + 8 + 8 + 1 = 122 bytes
+#[account]
+pub struct Inbox {
+    /// The wallet that owns this inbox
+    pub owner: Pubkey,
+    /// ECDH P-256 uncompressed public key (derived from wallet signature)
+    pub encryption_key: [u8; 65],
+    /// How many messages received
+    pub message_count: u64,
+    /// When the inbox was activated
+    pub created_at: i64,
+    /// PDA bump
+    pub bump: u8,
+}
+
+/// A direct message reference. The encrypted content lives on Arweave.
+/// Size: 8 + 8 + 32 + 32 + (4+64) + 1 + 1 + 8 + 1 = 159 bytes
+#[account]
+pub struct DirectMessage {
+    /// Sequential ID within the recipient's inbox
+    pub id: u64,
+    /// Who sent the message
+    pub sender: Pubkey,
+    /// Who receives the message
+    pub recipient: Pubkey,
+    /// Arweave transaction hash where encrypted content is stored
+    pub arweave_hash: String,
+    /// If true, recipient intends to burn after reading
+    pub burn_after_reading: bool,
+    /// Whether the message has been burned
+    pub burned: bool,
+    /// When the message was sent
+    pub timestamp: i64,
+    /// PDA bump
+    pub bump: u8,
+}
+
+#[derive(Accounts)]
+pub struct ActivateInbox<'info> {
+    #[account(
+        init,
+        payer = owner,
+        space = 8 + 32 + 65 + 8 + 8 + 1,
+        seeds = [b"inbox", owner.key().as_ref()],
+        bump
+    )]
+    pub inbox: Account<'info, Inbox>,
+
+    #[account(mut)]
+    pub owner: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct SendDirectMessage<'info> {
+    #[account(
+        init,
+        payer = sender,
+        space = 8 + 8 + 32 + 32 + (4 + MAX_ARWEAVE_HASH_LEN) + 1 + 1 + 8 + 1,
+        seeds = [b"dm", recipient_inbox.owner.as_ref(), &recipient_inbox.message_count.to_le_bytes()],
+        bump
+    )]
+    pub message: Account<'info, DirectMessage>,
+
+    #[account(mut)]
+    pub recipient_inbox: Account<'info, Inbox>,
+
+    #[account(mut)]
+    pub sender: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct BurnMessage<'info> {
+    #[account(
+        mut,
+        constraint = message.recipient == recipient.key()
+    )]
+    pub message: Account<'info, DirectMessage>,
+
+    pub recipient: Signer<'info>,
 }
