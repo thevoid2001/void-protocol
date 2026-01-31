@@ -14,7 +14,7 @@ void_protocol = "9wPskrpZiLSb3He3QoLZMEeiBKWJUh7ykGtkb2N7HX9H"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
