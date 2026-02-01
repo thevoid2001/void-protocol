@@ -1882,6 +1882,222 @@
       "siteUrl": "https://404media.co",
       "keywords": ["tech", "internet", "culture", "investigations"],
       "category": "tech"
+    },
+    {
+      "id": "substack-lenny",
+      "name": "Lenny's Newsletter",
+      "description": "Product, growth, and career advice",
+      "feedUrl": "https://www.lennysnewsletter.com/feed",
+      "siteUrl": "https://www.lennysnewsletter.com",
+      "keywords": ["product", "startup", "growth", "career", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-matt-levine",
+      "name": "Money Stuff by Matt Levine",
+      "description": "Finance, Wall Street, and corporate shenanigans",
+      "feedUrl": "https://www.bloomberg.com/opinion/authors/ARbTQlRLRjE/matthew-s-levine.rss",
+      "siteUrl": "https://www.bloomberg.com/opinion/authors/ARbTQlRLRjE/matthew-s-levine",
+      "keywords": ["finance", "wall street", "banking", "bloomberg"],
+      "category": "finance"
+    },
+    {
+      "id": "substack-slow-boring",
+      "name": "Slow Boring",
+      "description": "Matt Yglesias on policy and politics",
+      "feedUrl": "https://www.slowboring.com/feed",
+      "siteUrl": "https://www.slowboring.com",
+      "keywords": ["politics", "policy", "economics", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-common-sense",
+      "name": "Common Sense with Bari Weiss",
+      "description": "Independent journalism and commentary",
+      "feedUrl": "https://www.thefp.com/feed",
+      "siteUrl": "https://www.thefp.com",
+      "keywords": ["politics", "culture", "journalism", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-unreported-truths",
+      "name": "Unreported Truths",
+      "description": "Alex Berenson on Covid, pharma, and civil liberties",
+      "feedUrl": "https://alexberenson.substack.com/feed",
+      "siteUrl": "https://alexberenson.substack.com",
+      "keywords": ["covid", "pharma", "health", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-noahpinion",
+      "name": "Noahpinion",
+      "description": "Noah Smith on economics and Asia",
+      "feedUrl": "https://noahpinion.substack.com/feed",
+      "siteUrl": "https://noahpinion.substack.com",
+      "keywords": ["economics", "asia", "tech", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-construction-physics",
+      "name": "Construction Physics",
+      "description": "Brian Potter on construction and engineering",
+      "feedUrl": "https://constructionphysics.substack.com/feed",
+      "siteUrl": "https://constructionphysics.substack.com",
+      "keywords": ["construction", "engineering", "infrastructure", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-packy",
+      "name": "Not Boring by Packy McCormick",
+      "description": "Tech strategy and optimism",
+      "feedUrl": "https://www.notboring.co/feed",
+      "siteUrl": "https://www.notboring.co",
+      "keywords": ["tech", "startups", "strategy", "web3", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-milk-road",
+      "name": "Milk Road",
+      "description": "Daily crypto newsletter",
+      "feedUrl": "https://www.milkroad.com/feed",
+      "siteUrl": "https://www.milkroad.com",
+      "keywords": ["crypto", "bitcoin", "defi", "web3", "substack"],
+      "category": "crypto"
+    },
+    {
+      "id": "substack-the-generalist",
+      "name": "The Generalist",
+      "description": "Deep dives on tech companies",
+      "feedUrl": "https://www.generalist.com/feed",
+      "siteUrl": "https://www.generalist.com",
+      "keywords": ["tech", "startups", "analysis", "business", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-on-the-tape",
+      "name": "On The Tape",
+      "description": "Danny Moses on markets and trading",
+      "feedUrl": "https://onthetape.substack.com/feed",
+      "siteUrl": "https://onthetape.substack.com",
+      "keywords": ["markets", "trading", "stocks", "finance", "substack"],
+      "category": "finance"
+    },
+    {
+      "id": "substack-diff",
+      "name": "The Diff",
+      "description": "Byrne Hobart on finance and tech",
+      "feedUrl": "https://www.thediff.co/feed",
+      "siteUrl": "https://www.thediff.co",
+      "keywords": ["finance", "tech", "strategy", "analysis", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-doomberg",
+      "name": "Doomberg",
+      "description": "Energy, commodities, and macro",
+      "feedUrl": "https://doomberg.substack.com/feed",
+      "siteUrl": "https://doomberg.substack.com",
+      "keywords": ["energy", "commodities", "macro", "finance", "substack"],
+      "category": "finance"
+    },
+    {
+      "id": "substack-frontiertech",
+      "name": "Frontier Tech",
+      "description": "Deep tech and hard science startups",
+      "feedUrl": "https://frontiertech.substack.com/feed",
+      "siteUrl": "https://frontiertech.substack.com",
+      "keywords": ["deeptech", "science", "startups", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-every",
+      "name": "Every",
+      "description": "Business strategy and AI",
+      "feedUrl": "https://every.to/feed.xml",
+      "siteUrl": "https://every.to",
+      "keywords": ["business", "ai", "productivity", "startups", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-web3isgoinggreat",
+      "name": "Web3 is Going Great",
+      "description": "Chronicling crypto disasters by Molly White",
+      "feedUrl": "https://newsletter.mollywhite.net/feed",
+      "siteUrl": "https://newsletter.mollywhite.net",
+      "keywords": ["crypto", "web3", "scams", "skepticism", "substack"],
+      "category": "crypto"
+    },
+    {
+      "id": "substack-culture-study",
+      "name": "Culture Study",
+      "description": "Anne Helen Petersen on work and culture",
+      "feedUrl": "https://annehelen.substack.com/feed",
+      "siteUrl": "https://annehelen.substack.com",
+      "keywords": ["culture", "work", "millennials", "society", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-internal-exile",
+      "name": "Internal Exile",
+      "description": "Freddie deBoer on politics and culture",
+      "feedUrl": "https://freddiedeboer.substack.com/feed",
+      "siteUrl": "https://freddiedeboer.substack.com",
+      "keywords": ["politics", "culture", "education", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-prageng",
+      "name": "Pragmatic Engineer",
+      "description": "Gergely Orosz on software engineering",
+      "feedUrl": "https://newsletter.pragmaticengineer.com/feed",
+      "siteUrl": "https://newsletter.pragmaticengineer.com",
+      "keywords": ["engineering", "tech", "career", "software", "substack"],
+      "category": "programming"
+    },
+    {
+      "id": "substack-newcomer",
+      "name": "Newcomer",
+      "description": "Eric Newcomer on tech and VC",
+      "feedUrl": "https://www.newcomer.co/feed",
+      "siteUrl": "https://www.newcomer.co",
+      "keywords": ["tech", "vc", "startups", "silicon valley", "substack"],
+      "category": "substack"
+    },
+    {
+      "id": "substack-big-technology",
+      "name": "Big Technology",
+      "description": "Alex Kantrowitz on big tech",
+      "feedUrl": "https://bigtechnology.substack.com/feed",
+      "siteUrl": "https://bigtechnology.substack.com",
+      "keywords": ["tech", "faang", "big tech", "business", "substack"],
+      "category": "tech"
+    },
+    {
+      "id": "substack-thegeneralist",
+      "name": "The Pragmatic Programmer",
+      "description": "Practical programming wisdom",
+      "feedUrl": "https://thepragmaticprogrammer.substack.com/feed",
+      "siteUrl": "https://thepragmaticprogrammer.substack.com",
+      "keywords": ["programming", "software", "engineering", "substack"],
+      "category": "programming"
+    },
+    {
+      "id": "substack-compounding",
+      "name": "Compounding Quality",
+      "description": "Quality investing insights",
+      "feedUrl": "https://compoundingquality.substack.com/feed",
+      "siteUrl": "https://compoundingquality.substack.com",
+      "keywords": ["investing", "stocks", "quality", "finance", "substack"],
+      "category": "finance"
+    },
+    {
+      "id": "substack-thepullrequest",
+      "name": "The Pull Request",
+      "description": "Antonio Garcia Martinez on tech and culture",
+      "feedUrl": "https://thepullrequest.substack.com/feed",
+      "siteUrl": "https://thepullrequest.substack.com",
+      "keywords": ["tech", "culture", "silicon valley", "substack"],
+      "category": "substack"
     }
   ]
 }

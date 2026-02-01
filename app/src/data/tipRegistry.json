@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-02-01",
+  "description": "Authors can register their wallet to receive tips. Submit a PR to add yourself.",
+  "authors": [
+    {
+      "domain": "thevoidprotocol.netlify.app",
+      "name": "Void Protocol",
+      "wallet": "1nFRvQF3iXtx1WHvEr5RCpR6wrgNVXCVYoWYrPwKVXL",
+      "verified": true
+    },
+    {
+      "domain": "vitalik.eth.limo",
+      "name": "Vitalik Buterin",
+      "wallet": null,
+      "verified": false,
+      "note": "Example - wallet not registered"
+    }
+  ],
+  "substacks": [
+    {
+      "subdomain": "example",
+      "name": "Example Author",
+      "wallet": null,
+      "verified": false,
+      "note": "Substack authors: submit PR with your subdomain and Solana wallet"
+    }
+  ]
+}
