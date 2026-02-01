@@ -1,80 +1,103 @@
-# Void Protocol - Session State (Jan 31, 2026)
+# Void Protocol - Session State (Feb 1, 2026)
 
-## What We Just Completed
+## What We Just Built
 
-### Void Burn Feature - FULLY DEPLOYED
-- **Smart contract:** Updated and deployed to devnet
-- **Program ID:** `9wPskrpZiLSb3He3QoLZMEeiBKWJUh7ykGtkb2N7HX9H`
-- **Frontend:** Pushed to GitHub, auto-deploying to Netlify
-- **Live URL:** https://thevoidprotocol.netlify.app/burn
+### Void Feed - NEW FEATURE
+A privacy-first RSS reader with on-chain vouching.
 
-### Void Burn Functionality
-1. **activate_inbox** - User signs message → derives ECDH keypair → stores public key on-chain
-2. **send_direct_message** - Encrypt message with recipient's public key → upload to Arweave → store reference on-chain
-3. **burn_message** - Recipient can mark messages as burned
+**Live at:** https://thevoidprotocol.netlify.app/feed
 
-### Files Created/Modified for Void Burn
-- `programs/void-protocol/src/lib.rs` - Added Inbox, DirectMessage accounts + 3 instructions
-- `app/src/utils/encryption.ts` - Added `deriveEncryptionKeyPair()`, `VOID_BURN_SIGN_MESSAGE`
-- `app/src/pages/Burn.tsx` - Landing page with activate inbox
-- `app/src/pages/BurnSend.tsx` - Send encrypted messages
-- `app/src/pages/BurnInbox.tsx` - View/decrypt/burn messages
-- `app/src/App.tsx` - Added routes for /burn, /burn/send, /burn/inbox
-- `app/src/components/NavBar.tsx` - Added Burn link
-- `app/src/pages/Home.tsx` - Updated Void Burn card (no longer "coming soon")
+**Features Working:**
+- Search topics (crypto, tech, news, etc.) and see articles instantly
+- 199 RSS feeds across 12 categories
+- Add sources to personal feed
+- Vouch for articles (on-chain, wallet required)
+- Vouch counts displayed on articles
+- OPML import/export
+- Local storage (no accounts, no tracking)
+
+**Pages:**
+- `/feed` - Discover (search & browse)
+- `/feed/my` - Personal subscribed feed
+- `/feed/sources` - Manage sources & topics
+- `/feed/saved` - Saved articles
+
+### Smart Contract Updates
+- Added `vouch` and `unvouch` instructions
+- Added `WalletProfile` and `Follow` accounts (PENDING DEPLOY - need more devnet SOL)
+
+### Files Created for Void Feed
+- `app/src/pages/Feed.tsx` - Personal feed
+- `app/src/pages/FeedDiscover.tsx` - Search/discover
+- `app/src/pages/FeedSources.tsx` - Manage sources
+- `app/src/pages/FeedSaved.tsx` - Saved articles
+- `app/src/components/VouchButton.tsx` - Vouch button with counts
+- `app/src/utils/feedStorage.ts` - Local storage management
+- `app/src/utils/useFeedData.ts` - React hook for feed data
+- `app/src/data/feedIndex.json` - 199 RSS feeds index
+- `app/netlify/functions/search.ts` - Search feeds
+- `app/netlify/functions/detect.ts` - Auto-detect RSS from URL
+- `app/netlify/functions/fetch.ts` - Proxy RSS fetches
+- `app/netlify/functions/vouches.ts` - Get vouch counts
 
 ## Current State
 
 ### Deployed Infrastructure
-- **Solana Program:** Devnet, updated with Void Burn
+- **Solana Program:** Devnet `9wPskrpZiLSb3He3QoLZMEeiBKWJUh7ykGtkb2N7HX9H`
 - **Frontend:** Netlify at thevoidprotocol.netlify.app
-- **GitHub:** thevoid2001/void-protocol (anonymous account)
-- **Arweave:** Using Irys for uploads
+- **GitHub:** thevoid2001/void-protocol
+
+### Pending Deploy
+The follow wallet feature is built in the contract but not deployed yet (need ~0.12 more devnet SOL). Instructions ready:
+- `create_profile` - Opt-in to social features
+- `update_profile` - Toggle visibility/followers
+- `follow` / `unfollow` - Follow other wallets
 
 ### Wallet/Keys
 - Devnet wallet: `~/.config/solana/id.json`
-- Balance: ~2.64 SOL on devnet
+- Balance: ~2.46 SOL on devnet (need ~2.58 for deploy)
 - Upgrade authority: `1nFRvQF3iXtx1WHvEr5RCpR6wrgNVXCVYoWYrPwKVXL`
-
-### Anchor Config
-- `Anchor.toml` cluster set to `devnet`
-- Build command: `anchor build` (needs PATH set first)
-- Deploy command: `anchor deploy --provider.cluster devnet`
-
-### PATH Setup (needed for builds)
-```bash
-export PATH="$HOME/.cargo/bin:$HOME/.local/share/solana/install/active_release/bin:$HOME/.avm/bin:$PATH"
-```
 
 ## Product Suite Status
 
 | Feature | Status | Description |
 |---------|--------|-------------|
 | Void Stamp | ✅ Live | Proof of existence (hash files on-chain) |
-| Void Drop | ✅ Live | Anonymous encrypted document submission to orgs |
+| Void Drop | ✅ Live | Anonymous encrypted document submission |
 | Void Burn | ✅ Live | Wallet-to-wallet encrypted messaging |
+| Void Feed | ✅ Live | Private RSS reader with vouching |
 | Void Switch | ❌ Not started | Dead man's switch (planned) |
 
-## Previous Decisions Made
+## Void Feed Roadmap
 
-1. **Stay on devnet** - Free, good for demos. Mainnet when users need permanence.
-2. **Anonymous identity** - GitHub: thevoid2001, Email: thevoid2001@proton.me
-3. **Signature-derived keys for Void Burn** - No extra keys to manage
-4. **One-way messaging for Void Drop** - Not bidirectional (better for whistleblower privacy)
-5. **Optional burn** - Messages don't auto-destruct, recipient chooses
+### Completed
+- [x] Feed index (199 sources)
+- [x] Search and browse topics
+- [x] Add sources to personal feed
+- [x] Vouch for articles (on-chain)
+- [x] Vouch counts display
+- [x] OPML import/export
 
-## IDL Note
-The on-chain IDL upload failed (buffer too small for new larger IDL). This is non-blocking - the frontend has types compiled in and works fine. Can fix later by creating a new IDL account if needed.
+### In Progress (code ready, pending deploy)
+- [ ] Follow wallets
+- [ ] Wallet profiles (opt-in visibility)
+- [ ] "Vouched by people I follow" filter
 
-## To Test Void Burn
-1. Go to https://thevoidprotocol.netlify.app/burn
-2. Connect wallet
-3. Click "Activate Inbox" (sign the message)
-4. Have another wallet send you a message at /burn/send
-5. View messages at /burn/inbox (sign to unlock, then decrypt)
+### Planned
+- [ ] Tip authors (send SOL)
+- [ ] Article annotations
+- [ ] Reading stats (local)
+- [ ] Keyboard navigation
 
-## Next Steps (When You Return)
-- Test Void Burn end-to-end
-- Fix any bugs found
-- Consider: Void Switch (dead man's switch)
-- Consider: Tweet thread launch (best time: Tue/Wed 9am EST)
+## To Resume
+
+1. Get more devnet SOL (wait for faucet reset or use web faucet)
+2. Deploy updated contract: `anchor deploy --provider.cluster devnet`
+3. Build follow wallet UI components
+4. Add tip authors feature
+
+## Anonymous Git Config
+```
+git config user.name  # Should show: void
+git config user.email # Should show: thevoid2001@proton.me
+```

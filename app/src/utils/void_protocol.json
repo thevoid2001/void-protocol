@@ -171,6 +171,59 @@
       ]
     },
     {
+      "name": "create_profile",
+      "docs": [
+        "Create a wallet profile (opt-in to social features).",
+        "By default, reputation is hidden and followers are not allowed."
+      ],
+      "discriminator": [
+        225,
+        205,
+        234,
+        143,
+        17,
+        186,
+        50,
+        220
+      ],
+      "accounts": [
+        {
+          "name": "profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "wallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "wallet",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "create_proof",
       "docs": [
         "Store a SHA-256 hash on-chain as proof that a file existed at this moment.",
@@ -257,6 +310,90 @@
           "relations": [
             "organization"
           ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "follow",
+      "docs": [
+        "Follow another wallet. Target must allow followers."
+      ],
+      "discriminator": [
+        161,
+        61,
+        150,
+        122,
+        164,
+        153,
+        0,
+        18
+      ],
+      "accounts": [
+        {
+          "name": "follow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  102,
+                  111,
+                  108,
+                  108,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "follower"
+              },
+              {
+                "kind": "account",
+                "path": "target_profile.wallet",
+                "account": "WalletProfile"
+              }
+            ]
+          }
+        },
+        {
+          "name": "follower_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "follower"
+              }
+            ]
+          }
+        },
+        {
+          "name": "target_profile",
+          "writable": true
+        },
+        {
+          "name": "follower",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -400,6 +537,86 @@
       ]
     },
     {
+      "name": "unfollow",
+      "docs": [
+        "Unfollow a wallet."
+      ],
+      "discriminator": [
+        122,
+        47,
+        24,
+        161,
+        12,
+        85,
+        224,
+        68
+      ],
+      "accounts": [
+        {
+          "name": "follow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  102,
+                  111,
+                  108,
+                  108,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "follower"
+              },
+              {
+                "kind": "account",
+                "path": "target_profile.wallet",
+                "account": "WalletProfile"
+              }
+            ]
+          }
+        },
+        {
+          "name": "follower_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "follower"
+              }
+            ]
+          }
+        },
+        {
+          "name": "target_profile",
+          "writable": true
+        },
+        {
+          "name": "follower",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "unvouch",
       "docs": [
         "Remove a vouch (only the voucher can remove their own vouch)."
@@ -426,6 +643,62 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "update_profile",
+      "docs": [
+        "Update profile settings (toggle visibility and follower permissions)."
+      ],
+      "discriminator": [
+        98,
+        67,
+        99,
+        206,
+        86,
+        115,
+        175,
+        1
+      ],
+      "accounts": [
+        {
+          "name": "profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "wallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "wallet",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "reputation_visible",
+          "type": "bool"
+        },
+        {
+          "name": "allow_followers",
+          "type": "bool"
+        }
+      ]
     },
     {
       "name": "vouch",
@@ -508,6 +781,19 @@
       ]
     },
     {
+      "name": "Follow",
+      "discriminator": [
+        222,
+        247,
+        253,
+        60,
+        70,
+        4,
+        164,
+        51
+      ]
+    },
+    {
       "name": "Inbox",
       "discriminator": [
         41,
@@ -571,6 +857,19 @@
         175,
         210
       ]
+    },
+    {
+      "name": "WalletProfile",
+      "discriminator": [
+        9,
+        216,
+        26,
+        246,
+        37,
+        66,
+        29,
+        169
+      ]
     }
   ],
   "errors": [
@@ -608,6 +907,11 @@
       "code": 6006,
       "name": "AlreadyBurned",
       "msg": "Message has already been burned"
+    },
+    {
+      "code": 6007,
+      "name": "FollowersNotAllowed",
+      "msg": "This wallet does not allow followers"
     }
   ],
   "types": [
@@ -666,6 +970,46 @@
             "name": "timestamp",
             "docs": [
               "When the message was sent"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Follow",
+      "docs": [
+        "A follow relationship between two wallets.",
+        "Size: 8 + 32 + 32 + 8 + 1 = 81 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "follower",
+            "docs": [
+              "The wallet that is following"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "following",
+            "docs": [
+              "The wallet being followed"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "When the follow was created"
             ],
             "type": "i64"
           },
@@ -933,6 +1277,74 @@
             "name": "timestamp",
             "docs": [
               "When the vouch was made"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WalletProfile",
+      "docs": [
+        "A wallet's social profile. Opt-in for visibility and followers.",
+        "Size: 8 + 32 + 1 + 1 + 8 + 8 + 8 + 8 + 1 = 75 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "wallet",
+            "docs": [
+              "The wallet this profile belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "reputation_visible",
+            "docs": [
+              "Whether reputation score is publicly visible"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "allow_followers",
+            "docs": [
+              "Whether others can follow this wallet"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "total_vouches",
+            "docs": [
+              "Total number of vouches made"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "follower_count",
+            "docs": [
+              "Number of followers"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "following_count",
+            "docs": [
+              "Number of wallets being followed"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "When profile was created"
             ],
             "type": "i64"
           },

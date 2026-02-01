@@ -157,6 +157,69 @@ pub mod void_protocol {
         // Account will be closed and rent returned to voucher
         Ok(())
     }
+
+    /// Create a wallet profile (opt-in to social features).
+    /// By default, reputation is hidden and followers are not allowed.
+    pub fn create_profile(ctx: Context<CreateProfile>) -> Result<()> {
+        let profile = &mut ctx.accounts.profile;
+        profile.wallet = ctx.accounts.wallet.key();
+        profile.reputation_visible = false;
+        profile.allow_followers = false;
+        profile.total_vouches = 0;
+        profile.follower_count = 0;
+        profile.following_count = 0;
+        profile.created_at = Clock::get()?.unix_timestamp;
+        profile.bump = ctx.bumps.profile;
+        Ok(())
+    }
+
+    /// Update profile settings (toggle visibility and follower permissions).
+    pub fn update_profile(
+        ctx: Context<UpdateProfile>,
+        reputation_visible: bool,
+        allow_followers: bool,
+    ) -> Result<()> {
+        let profile = &mut ctx.accounts.profile;
+        profile.reputation_visible = reputation_visible;
+        profile.allow_followers = allow_followers;
+        Ok(())
+    }
+
+    /// Follow another wallet. Target must allow followers.
+    pub fn follow(ctx: Context<CreateFollow>) -> Result<()> {
+        require!(
+            ctx.accounts.target_profile.allow_followers,
+            VoidError::FollowersNotAllowed
+        );
+
+        let follow = &mut ctx.accounts.follow;
+        follow.follower = ctx.accounts.follower.key();
+        follow.following = ctx.accounts.target_profile.wallet;
+        follow.timestamp = Clock::get()?.unix_timestamp;
+        follow.bump = ctx.bumps.follow;
+
+        // Update counts
+        let follower_profile = &mut ctx.accounts.follower_profile;
+        follower_profile.following_count += 1;
+
+        let target_profile = &mut ctx.accounts.target_profile;
+        target_profile.follower_count += 1;
+
+        Ok(())
+    }
+
+    /// Unfollow a wallet.
+    pub fn unfollow(ctx: Context<RemoveFollow>) -> Result<()> {
+        // Update counts
+        let follower_profile = &mut ctx.accounts.follower_profile;
+        follower_profile.following_count = follower_profile.following_count.saturating_sub(1);
+
+        let target_profile = &mut ctx.accounts.target_profile;
+        target_profile.follower_count = target_profile.follower_count.saturating_sub(1);
+
+        // Account will be closed
+        Ok(())
+    }
 }
 
 // ─── ERRORS ─────────────────────────────────────────────────────
@@ -177,6 +240,8 @@ pub enum VoidError {
     OrgInactive,
     #[msg("Message has already been burned")]
     AlreadyBurned,
+    #[msg("This wallet does not allow followers")]
+    FollowersNotAllowed,
 }
 
 // ─── VOID STAMP ACCOUNTS ────────────────────────────────────────
@@ -438,4 +503,127 @@ pub struct RemoveVouch<'info> {
 
     #[account(mut)]
     pub voucher: Signer<'info>,
+}
+
+// ─── WALLET PROFILE ACCOUNTS ───────────────────────────────────
+
+/// A wallet's social profile. Opt-in for visibility and followers.
+/// Size: 8 + 32 + 1 + 1 + 8 + 8 + 8 + 8 + 1 = 75 bytes
+#[account]
+pub struct WalletProfile {
+    /// The wallet this profile belongs to
+    pub wallet: Pubkey,
+    /// Whether reputation score is publicly visible
+    pub reputation_visible: bool,
+    /// Whether others can follow this wallet
+    pub allow_followers: bool,
+    /// Total number of vouches made
+    pub total_vouches: u64,
+    /// Number of followers
+    pub follower_count: u64,
+    /// Number of wallets being followed
+    pub following_count: u64,
+    /// When profile was created
+    pub created_at: i64,
+    /// PDA bump
+    pub bump: u8,
+}
+
+/// A follow relationship between two wallets.
+/// Size: 8 + 32 + 32 + 8 + 1 = 81 bytes
+#[account]
+pub struct Follow {
+    /// The wallet that is following
+    pub follower: Pubkey,
+    /// The wallet being followed
+    pub following: Pubkey,
+    /// When the follow was created
+    pub timestamp: i64,
+    /// PDA bump
+    pub bump: u8,
+}
+
+#[derive(Accounts)]
+pub struct CreateProfile<'info> {
+    #[account(
+        init,
+        payer = wallet,
+        space = 8 + 32 + 1 + 1 + 8 + 8 + 8 + 8 + 1,
+        seeds = [b"profile", wallet.key().as_ref()],
+        bump
+    )]
+    pub profile: Account<'info, WalletProfile>,
+
+    #[account(mut)]
+    pub wallet: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct UpdateProfile<'info> {
+    #[account(
+        mut,
+        seeds = [b"profile", wallet.key().as_ref()],
+        bump = profile.bump,
+        constraint = profile.wallet == wallet.key()
+    )]
+    pub profile: Account<'info, WalletProfile>,
+
+    pub wallet: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct CreateFollow<'info> {
+    #[account(
+        init,
+        payer = follower,
+        space = 8 + 32 + 32 + 8 + 1,
+        seeds = [b"follow", follower.key().as_ref(), target_profile.wallet.as_ref()],
+        bump
+    )]
+    pub follow: Account<'info, Follow>,
+
+    #[account(
+        mut,
+        seeds = [b"profile", follower.key().as_ref()],
+        bump = follower_profile.bump
+    )]
+    pub follower_profile: Account<'info, WalletProfile>,
+
+    #[account(
+        mut,
+        constraint = target_profile.allow_followers @ VoidError::FollowersNotAllowed
+    )]
+    pub target_profile: Account<'info, WalletProfile>,
+
+    #[account(mut)]
+    pub follower: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct RemoveFollow<'info> {
+    #[account(
+        mut,
+        close = follower,
+        seeds = [b"follow", follower.key().as_ref(), target_profile.wallet.as_ref()],
+        bump = follow.bump,
+        constraint = follow.follower == follower.key()
+    )]
+    pub follow: Account<'info, Follow>,
+
+    #[account(
+        mut,
+        seeds = [b"profile", follower.key().as_ref()],
+        bump = follower_profile.bump
+    )]
+    pub follower_profile: Account<'info, WalletProfile>,
+
+    #[account(mut)]
+    pub target_profile: Account<'info, WalletProfile>,
+
+    #[account(mut)]
+    pub follower: Signer<'info>,
 }
