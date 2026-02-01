@@ -1,0 +1,1887 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-01-31",
+  "feeds": [
+    {
+      "id": "nyt-home",
+      "name": "The New York Times",
+      "description": "Breaking news, world news, and multimedia",
+      "feedUrl": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+      "siteUrl": "https://nytimes.com",
+      "keywords": ["news", "politics", "world", "us", "breaking"],
+      "category": "news"
+    },
+    {
+      "id": "nyt-tech",
+      "name": "NYT Technology",
+      "description": "Technology news from The New York Times",
+      "feedUrl": "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+      "siteUrl": "https://nytimes.com/section/technology",
+      "keywords": ["tech", "technology", "nytimes"],
+      "category": "tech"
+    },
+    {
+      "id": "nyt-business",
+      "name": "NYT Business",
+      "description": "Business and economy news from The New York Times",
+      "feedUrl": "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
+      "siteUrl": "https://nytimes.com/section/business",
+      "keywords": ["business", "economy", "markets", "nytimes"],
+      "category": "business"
+    },
+    {
+      "id": "nyt-sports",
+      "name": "NYT Sports",
+      "description": "Sports news from The New York Times",
+      "feedUrl": "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml",
+      "siteUrl": "https://nytimes.com/section/sports",
+      "keywords": ["sports", "nytimes"],
+      "category": "sports"
+    },
+    {
+      "id": "wsj-world",
+      "name": "Wall Street Journal - World",
+      "description": "World news from WSJ",
+      "feedUrl": "https://feeds.a]content.wsj.com/public/page/2_0065.xml",
+      "siteUrl": "https://wsj.com/world",
+      "keywords": ["news", "world", "wsj", "finance"],
+      "category": "news"
+    },
+    {
+      "id": "wsj-markets",
+      "name": "Wall Street Journal - Markets",
+      "description": "Market news and analysis",
+      "feedUrl": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
+      "siteUrl": "https://wsj.com/markets",
+      "keywords": ["markets", "stocks", "finance", "wsj", "investing"],
+      "category": "finance"
+    },
+    {
+      "id": "reuters-world",
+      "name": "Reuters - World News",
+      "description": "International news from Reuters",
+      "feedUrl": "https://www.reutersagency.com/feed/?best-regions=world&post_type=best",
+      "siteUrl": "https://reuters.com",
+      "keywords": ["news", "world", "international", "reuters"],
+      "category": "news"
+    },
+    {
+      "id": "ap-news",
+      "name": "Associated Press",
+      "description": "Breaking news from the AP",
+      "feedUrl": "https://rsshub.app/apnews/topics/apf-topnews",
+      "siteUrl": "https://apnews.com",
+      "keywords": ["news", "breaking", "ap", "world"],
+      "category": "news"
+    },
+    {
+      "id": "bbc-world",
+      "name": "BBC News - World",
+      "description": "World news from BBC",
+      "feedUrl": "https://feeds.bbci.co.uk/news/world/rss.xml",
+      "siteUrl": "https://bbc.com/news/world",
+      "keywords": ["news", "world", "bbc", "uk", "international"],
+      "category": "news"
+    },
+    {
+      "id": "bbc-tech",
+      "name": "BBC News - Technology",
+      "description": "Technology news from BBC",
+      "feedUrl": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+      "siteUrl": "https://bbc.com/news/technology",
+      "keywords": ["tech", "technology", "bbc"],
+      "category": "tech"
+    },
+    {
+      "id": "guardian-world",
+      "name": "The Guardian - World",
+      "description": "World news from The Guardian",
+      "feedUrl": "https://www.theguardian.com/world/rss",
+      "siteUrl": "https://theguardian.com/world",
+      "keywords": ["news", "world", "guardian", "uk"],
+      "category": "news"
+    },
+    {
+      "id": "guardian-tech",
+      "name": "The Guardian - Technology",
+      "description": "Technology news from The Guardian",
+      "feedUrl": "https://www.theguardian.com/technology/rss",
+      "siteUrl": "https://theguardian.com/technology",
+      "keywords": ["tech", "technology", "guardian"],
+      "category": "tech"
+    },
+    {
+      "id": "washpost",
+      "name": "Washington Post",
+      "description": "Breaking news and analysis",
+      "feedUrl": "https://feeds.washingtonpost.com/rss/national",
+      "siteUrl": "https://washingtonpost.com",
+      "keywords": ["news", "politics", "us", "washington"],
+      "category": "news"
+    },
+    {
+      "id": "npr-news",
+      "name": "NPR News",
+      "description": "Top stories from NPR",
+      "feedUrl": "https://feeds.npr.org/1001/rss.xml",
+      "siteUrl": "https://npr.org",
+      "keywords": ["news", "npr", "us", "public radio"],
+      "category": "news"
+    },
+    {
+      "id": "cnn-top",
+      "name": "CNN Top Stories",
+      "description": "Top stories from CNN",
+      "feedUrl": "http://rss.cnn.com/rss/cnn_topstories.rss",
+      "siteUrl": "https://cnn.com",
+      "keywords": ["news", "cnn", "breaking", "us"],
+      "category": "news"
+    },
+    {
+      "id": "economist",
+      "name": "The Economist",
+      "description": "News and analysis from The Economist",
+      "feedUrl": "https://www.economist.com/rss",
+      "siteUrl": "https://economist.com",
+      "keywords": ["news", "world", "business", "economics", "analysis"],
+      "category": "news"
+    },
+    {
+      "id": "techcrunch",
+      "name": "TechCrunch",
+      "description": "Startup and technology news",
+      "feedUrl": "https://techcrunch.com/feed/",
+      "siteUrl": "https://techcrunch.com",
+      "keywords": ["tech", "startups", "silicon valley", "venture capital", "apps"],
+      "category": "tech"
+    },
+    {
+      "id": "theverge",
+      "name": "The Verge",
+      "description": "Technology, science, art, and culture",
+      "feedUrl": "https://www.theverge.com/rss/index.xml",
+      "siteUrl": "https://theverge.com",
+      "keywords": ["tech", "gadgets", "culture", "reviews", "science"],
+      "category": "tech"
+    },
+    {
+      "id": "wired",
+      "name": "Wired",
+      "description": "Future of technology, science, and culture",
+      "feedUrl": "https://www.wired.com/feed/rss",
+      "siteUrl": "https://wired.com",
+      "keywords": ["tech", "science", "culture", "gadgets", "future"],
+      "category": "tech"
+    },
+    {
+      "id": "arstechnica",
+      "name": "Ars Technica",
+      "description": "Technology news and analysis",
+      "feedUrl": "https://feeds.arstechnica.com/arstechnica/index",
+      "siteUrl": "https://arstechnica.com",
+      "keywords": ["tech", "science", "gaming", "policy", "gadgets"],
+      "category": "tech"
+    },
+    {
+      "id": "engadget",
+      "name": "Engadget",
+      "description": "Technology news and reviews",
+      "feedUrl": "https://www.engadget.com/rss.xml",
+      "siteUrl": "https://engadget.com",
+      "keywords": ["tech", "gadgets", "reviews", "electronics"],
+      "category": "tech"
+    },
+    {
+      "id": "hackernews",
+      "name": "Hacker News",
+      "description": "Tech and startup news from YC",
+      "feedUrl": "https://hnrss.org/frontpage",
+      "siteUrl": "https://news.ycombinator.com",
+      "keywords": ["tech", "startups", "programming", "hacker", "ycombinator"],
+      "category": "tech"
+    },
+    {
+      "id": "mashable",
+      "name": "Mashable",
+      "description": "Digital culture and technology",
+      "feedUrl": "https://mashable.com/feeds/rss/all",
+      "siteUrl": "https://mashable.com",
+      "keywords": ["tech", "culture", "social media", "entertainment"],
+      "category": "tech"
+    },
+    {
+      "id": "9to5mac",
+      "name": "9to5Mac",
+      "description": "Apple news and rumors",
+      "feedUrl": "https://9to5mac.com/feed/",
+      "siteUrl": "https://9to5mac.com",
+      "keywords": ["apple", "mac", "iphone", "ios", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "9to5google",
+      "name": "9to5Google",
+      "description": "Google and Android news",
+      "feedUrl": "https://9to5google.com/feed/",
+      "siteUrl": "https://9to5google.com",
+      "keywords": ["google", "android", "pixel", "chrome", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "macrumors",
+      "name": "MacRumors",
+      "description": "Apple news and rumors",
+      "feedUrl": "https://feeds.macrumors.com/MacRumors-All",
+      "siteUrl": "https://macrumors.com",
+      "keywords": ["apple", "mac", "iphone", "ios", "rumors"],
+      "category": "tech"
+    },
+    {
+      "id": "androidpolice",
+      "name": "Android Police",
+      "description": "Android news and reviews",
+      "feedUrl": "https://www.androidpolice.com/feed/",
+      "siteUrl": "https://androidpolice.com",
+      "keywords": ["android", "google", "apps", "mobile", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "thenextweb",
+      "name": "The Next Web",
+      "description": "Tech news and insights",
+      "feedUrl": "https://thenextweb.com/feed/",
+      "siteUrl": "https://thenextweb.com",
+      "keywords": ["tech", "startups", "innovation", "business"],
+      "category": "tech"
+    },
+    {
+      "id": "venturebeat",
+      "name": "VentureBeat",
+      "description": "Tech news for decision makers",
+      "feedUrl": "https://venturebeat.com/feed/",
+      "siteUrl": "https://venturebeat.com",
+      "keywords": ["tech", "ai", "enterprise", "gaming", "startups"],
+      "category": "tech"
+    },
+    {
+      "id": "zdnet",
+      "name": "ZDNet",
+      "description": "Technology news and analysis",
+      "feedUrl": "https://www.zdnet.com/news/rss.xml",
+      "siteUrl": "https://zdnet.com",
+      "keywords": ["tech", "enterprise", "security", "software"],
+      "category": "tech"
+    },
+    {
+      "id": "cnet",
+      "name": "CNET",
+      "description": "Tech product reviews and news",
+      "feedUrl": "https://www.cnet.com/rss/all/",
+      "siteUrl": "https://cnet.com",
+      "keywords": ["tech", "reviews", "gadgets", "how-to"],
+      "category": "tech"
+    },
+    {
+      "id": "tomshardware",
+      "name": "Tom's Hardware",
+      "description": "PC hardware news and reviews",
+      "feedUrl": "https://www.tomshardware.com/feeds/all",
+      "siteUrl": "https://tomshardware.com",
+      "keywords": ["hardware", "pc", "gaming", "cpu", "gpu", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "anandtech",
+      "name": "AnandTech",
+      "description": "Deep dive hardware analysis",
+      "feedUrl": "https://www.anandtech.com/rss/",
+      "siteUrl": "https://anandtech.com",
+      "keywords": ["hardware", "cpu", "gpu", "benchmarks", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "slashdot",
+      "name": "Slashdot",
+      "description": "News for nerds",
+      "feedUrl": "https://rss.slashdot.org/Slashdot/slashdotMain",
+      "siteUrl": "https://slashdot.org",
+      "keywords": ["tech", "linux", "programming", "science", "geek"],
+      "category": "tech"
+    },
+    {
+      "id": "torrentfreak",
+      "name": "TorrentFreak",
+      "description": "File sharing and copyright news",
+      "feedUrl": "https://torrentfreak.com/feed/",
+      "siteUrl": "https://torrentfreak.com",
+      "keywords": ["piracy", "copyright", "torrents", "privacy", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "coindesk",
+      "name": "CoinDesk",
+      "description": "Crypto news and analysis",
+      "feedUrl": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+      "siteUrl": "https://coindesk.com",
+      "keywords": ["crypto", "bitcoin", "ethereum", "blockchain", "web3", "defi"],
+      "category": "crypto"
+    },
+    {
+      "id": "theblock",
+      "name": "The Block",
+      "description": "Crypto and blockchain news",
+      "feedUrl": "https://www.theblock.co/rss.xml",
+      "siteUrl": "https://theblock.co",
+      "keywords": ["crypto", "bitcoin", "ethereum", "defi", "nft", "web3"],
+      "category": "crypto"
+    },
+    {
+      "id": "decrypt",
+      "name": "Decrypt",
+      "description": "Crypto and web3 news",
+      "feedUrl": "https://decrypt.co/feed",
+      "siteUrl": "https://decrypt.co",
+      "keywords": ["crypto", "bitcoin", "ethereum", "web3", "nft", "defi"],
+      "category": "crypto"
+    },
+    {
+      "id": "cointelegraph",
+      "name": "Cointelegraph",
+      "description": "Crypto and blockchain news",
+      "feedUrl": "https://cointelegraph.com/rss",
+      "siteUrl": "https://cointelegraph.com",
+      "keywords": ["crypto", "bitcoin", "ethereum", "blockchain", "trading"],
+      "category": "crypto"
+    },
+    {
+      "id": "bitcoinmagazine",
+      "name": "Bitcoin Magazine",
+      "description": "Bitcoin news and analysis",
+      "feedUrl": "https://bitcoinmagazine.com/.rss/full/",
+      "siteUrl": "https://bitcoinmagazine.com",
+      "keywords": ["bitcoin", "crypto", "btc", "lightning", "blockchain"],
+      "category": "crypto"
+    },
+    {
+      "id": "defiant",
+      "name": "The Defiant",
+      "description": "DeFi news and analysis",
+      "feedUrl": "https://thedefiant.io/feed/",
+      "siteUrl": "https://thedefiant.io",
+      "keywords": ["defi", "ethereum", "crypto", "web3", "dex"],
+      "category": "crypto"
+    },
+    {
+      "id": "bankless",
+      "name": "Bankless",
+      "description": "Crypto and DeFi education",
+      "feedUrl": "https://www.bankless.com/rss/",
+      "siteUrl": "https://bankless.com",
+      "keywords": ["defi", "ethereum", "crypto", "web3", "education"],
+      "category": "crypto"
+    },
+    {
+      "id": "messari",
+      "name": "Messari",
+      "description": "Crypto research and analysis",
+      "feedUrl": "https://messari.io/rss",
+      "siteUrl": "https://messari.io",
+      "keywords": ["crypto", "research", "analysis", "bitcoin", "ethereum"],
+      "category": "crypto"
+    },
+    {
+      "id": "cryptoslate",
+      "name": "CryptoSlate",
+      "description": "Crypto news and data",
+      "feedUrl": "https://cryptoslate.com/feed/",
+      "siteUrl": "https://cryptoslate.com",
+      "keywords": ["crypto", "bitcoin", "ethereum", "news", "blockchain"],
+      "category": "crypto"
+    },
+    {
+      "id": "dailyhodl",
+      "name": "The Daily Hodl",
+      "description": "Crypto news for investors",
+      "feedUrl": "https://dailyhodl.com/feed/",
+      "siteUrl": "https://dailyhodl.com",
+      "keywords": ["crypto", "bitcoin", "altcoins", "trading", "news"],
+      "category": "crypto"
+    },
+    {
+      "id": "bitcoinist",
+      "name": "Bitcoinist",
+      "description": "Bitcoin and crypto news",
+      "feedUrl": "https://bitcoinist.com/feed/",
+      "siteUrl": "https://bitcoinist.com",
+      "keywords": ["bitcoin", "crypto", "news", "altcoins"],
+      "category": "crypto"
+    },
+    {
+      "id": "blockonomi",
+      "name": "Blockonomi",
+      "description": "Blockchain and crypto guide",
+      "feedUrl": "https://blockonomi.com/feed/",
+      "siteUrl": "https://blockonomi.com",
+      "keywords": ["crypto", "blockchain", "guides", "news"],
+      "category": "crypto"
+    },
+    {
+      "id": "solana-news",
+      "name": "Solana News",
+      "description": "Solana ecosystem news",
+      "feedUrl": "https://solana.com/news/rss.xml",
+      "siteUrl": "https://solana.com/news",
+      "keywords": ["solana", "sol", "crypto", "web3", "blockchain"],
+      "category": "crypto"
+    },
+    {
+      "id": "bloomberg-markets",
+      "name": "Bloomberg Markets",
+      "description": "Financial markets news",
+      "feedUrl": "https://feeds.bloomberg.com/markets/news.rss",
+      "siteUrl": "https://bloomberg.com/markets",
+      "keywords": ["markets", "stocks", "finance", "trading", "investing"],
+      "category": "finance"
+    },
+    {
+      "id": "bloomberg-tech",
+      "name": "Bloomberg Technology",
+      "description": "Tech business news from Bloomberg",
+      "feedUrl": "https://feeds.bloomberg.com/technology/news.rss",
+      "siteUrl": "https://bloomberg.com/technology",
+      "keywords": ["tech", "business", "finance", "bloomberg"],
+      "category": "tech"
+    },
+    {
+      "id": "cnbc-top",
+      "name": "CNBC Top News",
+      "description": "Business and market news",
+      "feedUrl": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114",
+      "siteUrl": "https://cnbc.com",
+      "keywords": ["business", "markets", "stocks", "finance", "cnbc"],
+      "category": "finance"
+    },
+    {
+      "id": "cnbc-investing",
+      "name": "CNBC Investing",
+      "description": "Investment news and tips",
+      "feedUrl": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839069",
+      "siteUrl": "https://cnbc.com/investing",
+      "keywords": ["investing", "stocks", "finance", "markets"],
+      "category": "finance"
+    },
+    {
+      "id": "ft",
+      "name": "Financial Times",
+      "description": "Business and financial news",
+      "feedUrl": "https://www.ft.com/rss/home",
+      "siteUrl": "https://ft.com",
+      "keywords": ["business", "finance", "markets", "world", "uk"],
+      "category": "finance"
+    },
+    {
+      "id": "marketwatch",
+      "name": "MarketWatch",
+      "description": "Stock market news and analysis",
+      "feedUrl": "https://feeds.marketwatch.com/marketwatch/topstories/",
+      "siteUrl": "https://marketwatch.com",
+      "keywords": ["stocks", "markets", "investing", "finance"],
+      "category": "finance"
+    },
+    {
+      "id": "seekingalpha",
+      "name": "Seeking Alpha",
+      "description": "Stock market analysis",
+      "feedUrl": "https://seekingalpha.com/feed.xml",
+      "siteUrl": "https://seekingalpha.com",
+      "keywords": ["stocks", "investing", "analysis", "finance"],
+      "category": "finance"
+    },
+    {
+      "id": "investopedia",
+      "name": "Investopedia",
+      "description": "Finance education and news",
+      "feedUrl": "https://www.investopedia.com/feedbuilder/feed/getfeed?feedName=rss_headline",
+      "siteUrl": "https://investopedia.com",
+      "keywords": ["finance", "investing", "education", "stocks"],
+      "category": "finance"
+    },
+    {
+      "id": "forbes",
+      "name": "Forbes",
+      "description": "Business news and billionaires",
+      "feedUrl": "https://www.forbes.com/real-time/feed2/",
+      "siteUrl": "https://forbes.com",
+      "keywords": ["business", "billionaires", "wealth", "finance"],
+      "category": "business"
+    },
+    {
+      "id": "fortune",
+      "name": "Fortune",
+      "description": "Business news and analysis",
+      "feedUrl": "https://fortune.com/feed/",
+      "siteUrl": "https://fortune.com",
+      "keywords": ["business", "fortune 500", "leadership", "finance"],
+      "category": "business"
+    },
+    {
+      "id": "businessinsider",
+      "name": "Business Insider",
+      "description": "Business and tech news",
+      "feedUrl": "https://www.businessinsider.com/rss",
+      "siteUrl": "https://businessinsider.com",
+      "keywords": ["business", "tech", "finance", "careers"],
+      "category": "business"
+    },
+    {
+      "id": "fastcompany",
+      "name": "Fast Company",
+      "description": "Innovation in business",
+      "feedUrl": "https://www.fastcompany.com/latest/rss",
+      "siteUrl": "https://fastcompany.com",
+      "keywords": ["business", "innovation", "design", "tech"],
+      "category": "business"
+    },
+    {
+      "id": "inc",
+      "name": "Inc.",
+      "description": "Small business and startups",
+      "feedUrl": "https://www.inc.com/rss/",
+      "siteUrl": "https://inc.com",
+      "keywords": ["business", "startups", "entrepreneurship", "small business"],
+      "category": "business"
+    },
+    {
+      "id": "entrepreneur",
+      "name": "Entrepreneur",
+      "description": "Entrepreneurship and startups",
+      "feedUrl": "https://www.entrepreneur.com/latest.rss",
+      "siteUrl": "https://entrepreneur.com",
+      "keywords": ["startups", "business", "entrepreneurship", "small business"],
+      "category": "business"
+    },
+    {
+      "id": "hbr",
+      "name": "Harvard Business Review",
+      "description": "Management and leadership",
+      "feedUrl": "https://hbr.org/resources/xml/hbr/rss/rss.xml",
+      "siteUrl": "https://hbr.org",
+      "keywords": ["business", "management", "leadership", "strategy"],
+      "category": "business"
+    },
+    {
+      "id": "espn-top",
+      "name": "ESPN Top Headlines",
+      "description": "Top sports news",
+      "feedUrl": "https://www.espn.com/espn/rss/news",
+      "siteUrl": "https://espn.com",
+      "keywords": ["sports", "nba", "nfl", "mlb", "soccer"],
+      "category": "sports"
+    },
+    {
+      "id": "espn-nba",
+      "name": "ESPN NBA",
+      "description": "NBA news and scores",
+      "feedUrl": "https://www.espn.com/espn/rss/nba/news",
+      "siteUrl": "https://espn.com/nba",
+      "keywords": ["nba", "basketball", "sports"],
+      "category": "sports"
+    },
+    {
+      "id": "espn-nfl",
+      "name": "ESPN NFL",
+      "description": "NFL news and scores",
+      "feedUrl": "https://www.espn.com/espn/rss/nfl/news",
+      "siteUrl": "https://espn.com/nfl",
+      "keywords": ["nfl", "football", "sports"],
+      "category": "sports"
+    },
+    {
+      "id": "espn-mlb",
+      "name": "ESPN MLB",
+      "description": "MLB news and scores",
+      "feedUrl": "https://www.espn.com/espn/rss/mlb/news",
+      "siteUrl": "https://espn.com/mlb",
+      "keywords": ["mlb", "baseball", "sports"],
+      "category": "sports"
+    },
+    {
+      "id": "espn-soccer",
+      "name": "ESPN Soccer",
+      "description": "Soccer/football news",
+      "feedUrl": "https://www.espn.com/espn/rss/soccer/news",
+      "siteUrl": "https://espn.com/soccer",
+      "keywords": ["soccer", "football", "premier league", "sports"],
+      "category": "sports"
+    },
+    {
+      "id": "bleacherreport",
+      "name": "Bleacher Report",
+      "description": "Sports news and highlights",
+      "feedUrl": "https://bleacherreport.com/articles/feed",
+      "siteUrl": "https://bleacherreport.com",
+      "keywords": ["sports", "nba", "nfl", "highlights"],
+      "category": "sports"
+    },
+    {
+      "id": "theathletic",
+      "name": "The Athletic",
+      "description": "In-depth sports journalism",
+      "feedUrl": "https://theathletic.com/feeds/rss/news/",
+      "siteUrl": "https://theathletic.com",
+      "keywords": ["sports", "analysis", "nba", "nfl", "soccer"],
+      "category": "sports"
+    },
+    {
+      "id": "cbssports",
+      "name": "CBS Sports",
+      "description": "Sports news and scores",
+      "feedUrl": "https://www.cbssports.com/rss/headlines/",
+      "siteUrl": "https://cbssports.com",
+      "keywords": ["sports", "nfl", "nba", "mlb", "scores"],
+      "category": "sports"
+    },
+    {
+      "id": "sportingnews",
+      "name": "Sporting News",
+      "description": "Sports news and analysis",
+      "feedUrl": "https://www.sportingnews.com/us/rss",
+      "siteUrl": "https://sportingnews.com",
+      "keywords": ["sports", "news", "analysis"],
+      "category": "sports"
+    },
+    {
+      "id": "sbnation",
+      "name": "SB Nation",
+      "description": "Fan-focused sports coverage",
+      "feedUrl": "https://www.sbnation.com/rss/index.xml",
+      "siteUrl": "https://sbnation.com",
+      "keywords": ["sports", "nfl", "nba", "mlb", "fans"],
+      "category": "sports"
+    },
+    {
+      "id": "deadspin",
+      "name": "Deadspin",
+      "description": "Sports and sports culture",
+      "feedUrl": "https://deadspin.com/rss",
+      "siteUrl": "https://deadspin.com",
+      "keywords": ["sports", "culture", "commentary"],
+      "category": "sports"
+    },
+    {
+      "id": "mmamania",
+      "name": "MMA Mania",
+      "description": "UFC and MMA news",
+      "feedUrl": "https://www.mmamania.com/rss/index.xml",
+      "siteUrl": "https://mmamania.com",
+      "keywords": ["mma", "ufc", "fighting", "combat sports"],
+      "category": "sports"
+    },
+    {
+      "id": "f1",
+      "name": "Formula 1",
+      "description": "F1 racing news",
+      "feedUrl": "https://www.formula1.com/content/fom-website/en/latest/all.xml",
+      "siteUrl": "https://formula1.com",
+      "keywords": ["f1", "racing", "motorsports", "formula 1"],
+      "category": "sports"
+    },
+    {
+      "id": "nature",
+      "name": "Nature",
+      "description": "Scientific research and news",
+      "feedUrl": "https://www.nature.com/nature.rss",
+      "siteUrl": "https://nature.com",
+      "keywords": ["science", "research", "nature", "biology", "physics"],
+      "category": "science"
+    },
+    {
+      "id": "science-mag",
+      "name": "Science Magazine",
+      "description": "Scientific research from AAAS",
+      "feedUrl": "https://www.science.org/rss/news_current.xml",
+      "siteUrl": "https://science.org",
+      "keywords": ["science", "research", "aaas", "biology"],
+      "category": "science"
+    },
+    {
+      "id": "scientificamerican",
+      "name": "Scientific American",
+      "description": "Science news and features",
+      "feedUrl": "https://rss.sciam.com/ScientificAmerican-Global",
+      "siteUrl": "https://scientificamerican.com",
+      "keywords": ["science", "technology", "health", "environment"],
+      "category": "science"
+    },
+    {
+      "id": "newscientist",
+      "name": "New Scientist",
+      "description": "Science and technology news",
+      "feedUrl": "https://www.newscientist.com/feed/home/",
+      "siteUrl": "https://newscientist.com",
+      "keywords": ["science", "technology", "space", "health"],
+      "category": "science"
+    },
+    {
+      "id": "phys-org",
+      "name": "Phys.org",
+      "description": "Science and technology news",
+      "feedUrl": "https://phys.org/rss-feed/",
+      "siteUrl": "https://phys.org",
+      "keywords": ["science", "physics", "technology", "research"],
+      "category": "science"
+    },
+    {
+      "id": "livescience",
+      "name": "Live Science",
+      "description": "Science news and discoveries",
+      "feedUrl": "https://www.livescience.com/feeds/all",
+      "siteUrl": "https://livescience.com",
+      "keywords": ["science", "space", "health", "animals"],
+      "category": "science"
+    },
+    {
+      "id": "space-com",
+      "name": "Space.com",
+      "description": "Space and astronomy news",
+      "feedUrl": "https://www.space.com/feeds/all",
+      "siteUrl": "https://space.com",
+      "keywords": ["space", "astronomy", "nasa", "rockets", "science"],
+      "category": "science"
+    },
+    {
+      "id": "nasa",
+      "name": "NASA Breaking News",
+      "description": "News from NASA",
+      "feedUrl": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
+      "siteUrl": "https://nasa.gov",
+      "keywords": ["nasa", "space", "astronomy", "rockets"],
+      "category": "science"
+    },
+    {
+      "id": "quantamagazine",
+      "name": "Quanta Magazine",
+      "description": "Math, physics, and biology",
+      "feedUrl": "https://api.quantamagazine.org/feed/",
+      "siteUrl": "https://quantamagazine.org",
+      "keywords": ["science", "math", "physics", "research"],
+      "category": "science"
+    },
+    {
+      "id": "mit-news",
+      "name": "MIT News",
+      "description": "Research news from MIT",
+      "feedUrl": "https://news.mit.edu/rss/feed",
+      "siteUrl": "https://news.mit.edu",
+      "keywords": ["science", "technology", "research", "mit"],
+      "category": "science"
+    },
+    {
+      "id": "ign",
+      "name": "IGN",
+      "description": "Video game and entertainment news",
+      "feedUrl": "https://feeds.feedburner.com/ign/all",
+      "siteUrl": "https://ign.com",
+      "keywords": ["gaming", "games", "movies", "entertainment", "reviews"],
+      "category": "gaming"
+    },
+    {
+      "id": "gamespot",
+      "name": "GameSpot",
+      "description": "Video game news and reviews",
+      "feedUrl": "https://www.gamespot.com/feeds/mashup/",
+      "siteUrl": "https://gamespot.com",
+      "keywords": ["gaming", "games", "reviews", "playstation", "xbox"],
+      "category": "gaming"
+    },
+    {
+      "id": "kotaku",
+      "name": "Kotaku",
+      "description": "Gaming news and culture",
+      "feedUrl": "https://kotaku.com/rss",
+      "siteUrl": "https://kotaku.com",
+      "keywords": ["gaming", "games", "culture", "anime"],
+      "category": "gaming"
+    },
+    {
+      "id": "polygon",
+      "name": "Polygon",
+      "description": "Gaming and entertainment",
+      "feedUrl": "https://www.polygon.com/rss/index.xml",
+      "siteUrl": "https://polygon.com",
+      "keywords": ["gaming", "games", "movies", "tv", "entertainment"],
+      "category": "gaming"
+    },
+    {
+      "id": "pcgamer",
+      "name": "PC Gamer",
+      "description": "PC gaming news and reviews",
+      "feedUrl": "https://www.pcgamer.com/rss/",
+      "siteUrl": "https://pcgamer.com",
+      "keywords": ["gaming", "pc", "steam", "hardware"],
+      "category": "gaming"
+    },
+    {
+      "id": "rockpapershotgun",
+      "name": "Rock Paper Shotgun",
+      "description": "PC gaming news",
+      "feedUrl": "https://www.rockpapershotgun.com/feed",
+      "siteUrl": "https://rockpapershotgun.com",
+      "keywords": ["gaming", "pc", "indie", "reviews"],
+      "category": "gaming"
+    },
+    {
+      "id": "eurogamer",
+      "name": "Eurogamer",
+      "description": "Video game news from Europe",
+      "feedUrl": "https://www.eurogamer.net/feed",
+      "siteUrl": "https://eurogamer.net",
+      "keywords": ["gaming", "games", "reviews", "europe"],
+      "category": "gaming"
+    },
+    {
+      "id": "nintendolife",
+      "name": "Nintendo Life",
+      "description": "Nintendo news and reviews",
+      "feedUrl": "https://www.nintendolife.com/feeds/latest",
+      "siteUrl": "https://nintendolife.com",
+      "keywords": ["nintendo", "switch", "gaming", "mario", "zelda"],
+      "category": "gaming"
+    },
+    {
+      "id": "pushsquare",
+      "name": "Push Square",
+      "description": "PlayStation news and reviews",
+      "feedUrl": "https://www.pushsquare.com/feeds/latest",
+      "siteUrl": "https://pushsquare.com",
+      "keywords": ["playstation", "ps5", "gaming", "sony"],
+      "category": "gaming"
+    },
+    {
+      "id": "purexbox",
+      "name": "Pure Xbox",
+      "description": "Xbox news and reviews",
+      "feedUrl": "https://www.purexbox.com/feeds/latest",
+      "siteUrl": "https://purexbox.com",
+      "keywords": ["xbox", "microsoft", "gaming", "game pass"],
+      "category": "gaming"
+    },
+    {
+      "id": "variety",
+      "name": "Variety",
+      "description": "Entertainment industry news",
+      "feedUrl": "https://variety.com/feed/",
+      "siteUrl": "https://variety.com",
+      "keywords": ["entertainment", "movies", "tv", "hollywood", "streaming"],
+      "category": "entertainment"
+    },
+    {
+      "id": "hollywoodreporter",
+      "name": "The Hollywood Reporter",
+      "description": "Entertainment industry news",
+      "feedUrl": "https://www.hollywoodreporter.com/feed/",
+      "siteUrl": "https://hollywoodreporter.com",
+      "keywords": ["entertainment", "movies", "tv", "hollywood"],
+      "category": "entertainment"
+    },
+    {
+      "id": "deadline",
+      "name": "Deadline",
+      "description": "Entertainment breaking news",
+      "feedUrl": "https://deadline.com/feed/",
+      "siteUrl": "https://deadline.com",
+      "keywords": ["entertainment", "movies", "tv", "hollywood", "breaking"],
+      "category": "entertainment"
+    },
+    {
+      "id": "ew",
+      "name": "Entertainment Weekly",
+      "description": "Pop culture and entertainment",
+      "feedUrl": "https://ew.com/feed/",
+      "siteUrl": "https://ew.com",
+      "keywords": ["entertainment", "movies", "tv", "music", "pop culture"],
+      "category": "entertainment"
+    },
+    {
+      "id": "avclub",
+      "name": "The A.V. Club",
+      "description": "Pop culture reviews",
+      "feedUrl": "https://www.avclub.com/rss",
+      "siteUrl": "https://avclub.com",
+      "keywords": ["entertainment", "movies", "tv", "reviews", "culture"],
+      "category": "entertainment"
+    },
+    {
+      "id": "collider",
+      "name": "Collider",
+      "description": "Movies and TV news",
+      "feedUrl": "https://collider.com/feed/",
+      "siteUrl": "https://collider.com",
+      "keywords": ["movies", "tv", "trailers", "reviews", "entertainment"],
+      "category": "entertainment"
+    },
+    {
+      "id": "screenrant",
+      "name": "Screen Rant",
+      "description": "Movies, TV, and gaming",
+      "feedUrl": "https://screenrant.com/feed/",
+      "siteUrl": "https://screenrant.com",
+      "keywords": ["movies", "tv", "gaming", "comics", "entertainment"],
+      "category": "entertainment"
+    },
+    {
+      "id": "indiewire",
+      "name": "IndieWire",
+      "description": "Independent film news",
+      "feedUrl": "https://www.indiewire.com/feed/",
+      "siteUrl": "https://indiewire.com",
+      "keywords": ["movies", "indie", "film", "festivals"],
+      "category": "entertainment"
+    },
+    {
+      "id": "pitchfork",
+      "name": "Pitchfork",
+      "description": "Music news and reviews",
+      "feedUrl": "https://pitchfork.com/feed/feed-news/rss",
+      "siteUrl": "https://pitchfork.com",
+      "keywords": ["music", "reviews", "indie", "albums"],
+      "category": "entertainment"
+    },
+    {
+      "id": "rollingstone",
+      "name": "Rolling Stone",
+      "description": "Music, culture, and politics",
+      "feedUrl": "https://www.rollingstone.com/feed/",
+      "siteUrl": "https://rollingstone.com",
+      "keywords": ["music", "culture", "politics", "entertainment"],
+      "category": "entertainment"
+    },
+    {
+      "id": "stereogum",
+      "name": "Stereogum",
+      "description": "Indie music news",
+      "feedUrl": "https://www.stereogum.com/feed/",
+      "siteUrl": "https://stereogum.com",
+      "keywords": ["music", "indie", "albums", "reviews"],
+      "category": "entertainment"
+    },
+    {
+      "id": "consequenceofsound",
+      "name": "Consequence",
+      "description": "Music and entertainment",
+      "feedUrl": "https://consequence.net/feed/",
+      "siteUrl": "https://consequence.net",
+      "keywords": ["music", "concerts", "festivals", "entertainment"],
+      "category": "entertainment"
+    },
+    {
+      "id": "stratechery",
+      "name": "Stratechery",
+      "description": "Tech strategy analysis by Ben Thompson",
+      "feedUrl": "https://stratechery.com/feed/",
+      "siteUrl": "https://stratechery.com",
+      "keywords": ["tech", "strategy", "analysis", "business", "apple"],
+      "category": "tech"
+    },
+    {
+      "id": "daringfireball",
+      "name": "Daring Fireball",
+      "description": "Apple commentary by John Gruber",
+      "feedUrl": "https://daringfireball.net/feeds/main",
+      "siteUrl": "https://daringfireball.net",
+      "keywords": ["apple", "mac", "tech", "commentary"],
+      "category": "tech"
+    },
+    {
+      "id": "kottke",
+      "name": "Kottke.org",
+      "description": "Liberal arts link blog",
+      "feedUrl": "https://feeds.kottke.org/main",
+      "siteUrl": "https://kottke.org",
+      "keywords": ["culture", "links", "internet", "design"],
+      "category": "culture"
+    },
+    {
+      "id": "brainpickings",
+      "name": "The Marginalian",
+      "description": "Literature, science, art",
+      "feedUrl": "https://www.themarginalian.org/feed/",
+      "siteUrl": "https://themarginalian.org",
+      "keywords": ["culture", "books", "philosophy", "art"],
+      "category": "culture"
+    },
+    {
+      "id": "longreads",
+      "name": "Longreads",
+      "description": "Long-form journalism",
+      "feedUrl": "https://longreads.com/feed/",
+      "siteUrl": "https://longreads.com",
+      "keywords": ["longform", "journalism", "essays", "stories"],
+      "category": "culture"
+    },
+    {
+      "id": "nautil-us",
+      "name": "Nautilus",
+      "description": "Science meets philosophy",
+      "feedUrl": "https://nautil.us/feed/",
+      "siteUrl": "https://nautil.us",
+      "keywords": ["science", "philosophy", "culture", "essays"],
+      "category": "science"
+    },
+    {
+      "id": "aeon",
+      "name": "Aeon",
+      "description": "Essays on big ideas",
+      "feedUrl": "https://aeon.co/feed.rss",
+      "siteUrl": "https://aeon.co",
+      "keywords": ["philosophy", "science", "culture", "essays"],
+      "category": "culture"
+    },
+    {
+      "id": "theatlantic",
+      "name": "The Atlantic",
+      "description": "News, politics, culture",
+      "feedUrl": "https://www.theatlantic.com/feed/all/",
+      "siteUrl": "https://theatlantic.com",
+      "keywords": ["news", "politics", "culture", "essays"],
+      "category": "news"
+    },
+    {
+      "id": "newyorker",
+      "name": "The New Yorker",
+      "description": "News, culture, and commentary",
+      "feedUrl": "https://www.newyorker.com/feed/everything",
+      "siteUrl": "https://newyorker.com",
+      "keywords": ["culture", "politics", "essays", "fiction"],
+      "category": "culture"
+    },
+    {
+      "id": "vox",
+      "name": "Vox",
+      "description": "Explanatory journalism",
+      "feedUrl": "https://www.vox.com/rss/index.xml",
+      "siteUrl": "https://vox.com",
+      "keywords": ["news", "explainers", "politics", "culture"],
+      "category": "news"
+    },
+    {
+      "id": "fivethirtyeight",
+      "name": "FiveThirtyEight",
+      "description": "Data-driven analysis",
+      "feedUrl": "https://fivethirtyeight.com/features/feed/",
+      "siteUrl": "https://fivethirtyeight.com",
+      "keywords": ["politics", "data", "sports", "science"],
+      "category": "news"
+    },
+    {
+      "id": "axios",
+      "name": "Axios",
+      "description": "Smart brevity news",
+      "feedUrl": "https://api.axios.com/feed/",
+      "siteUrl": "https://axios.com",
+      "keywords": ["news", "politics", "business", "tech"],
+      "category": "news"
+    },
+    {
+      "id": "politico",
+      "name": "Politico",
+      "description": "Political news",
+      "feedUrl": "https://rss.politico.com/politics-news.xml",
+      "siteUrl": "https://politico.com",
+      "keywords": ["politics", "washington", "congress", "news"],
+      "category": "news"
+    },
+    {
+      "id": "thehill",
+      "name": "The Hill",
+      "description": "Political news from Capitol Hill",
+      "feedUrl": "https://thehill.com/feed/",
+      "siteUrl": "https://thehill.com",
+      "keywords": ["politics", "congress", "washington", "news"],
+      "category": "news"
+    },
+    {
+      "id": "propublica",
+      "name": "ProPublica",
+      "description": "Investigative journalism",
+      "feedUrl": "https://www.propublica.org/feeds/propublica/main",
+      "siteUrl": "https://propublica.org",
+      "keywords": ["journalism", "investigations", "news"],
+      "category": "news"
+    },
+    {
+      "id": "theintercept",
+      "name": "The Intercept",
+      "description": "Investigative journalism",
+      "feedUrl": "https://theintercept.com/feed/?rss",
+      "siteUrl": "https://theintercept.com",
+      "keywords": ["journalism", "investigations", "politics"],
+      "category": "news"
+    },
+    {
+      "id": "vice",
+      "name": "Vice",
+      "description": "Youth culture and news",
+      "feedUrl": "https://www.vice.com/en/rss",
+      "siteUrl": "https://vice.com",
+      "keywords": ["culture", "news", "youth", "documentaries"],
+      "category": "culture"
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "description": "Cybersecurity news and investigation",
+      "feedUrl": "https://krebsonsecurity.com/feed/",
+      "siteUrl": "https://krebsonsecurity.com",
+      "keywords": ["security", "cybersecurity", "hacking", "privacy"],
+      "category": "tech"
+    },
+    {
+      "id": "schneier",
+      "name": "Schneier on Security",
+      "description": "Security analysis by Bruce Schneier",
+      "feedUrl": "https://www.schneier.com/feed/atom/",
+      "siteUrl": "https://schneier.com",
+      "keywords": ["security", "cryptography", "privacy", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "description": "Cybersecurity news",
+      "feedUrl": "https://therecord.media/feed/",
+      "siteUrl": "https://therecord.media",
+      "keywords": ["security", "cybersecurity", "ransomware", "hacking"],
+      "category": "tech"
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "description": "Tech support and security news",
+      "feedUrl": "https://www.bleepingcomputer.com/feed/",
+      "siteUrl": "https://bleepingcomputer.com",
+      "keywords": ["security", "malware", "tech support", "windows"],
+      "category": "tech"
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "description": "Enterprise security news",
+      "feedUrl": "https://www.darkreading.com/rss.xml",
+      "siteUrl": "https://darkreading.com",
+      "keywords": ["security", "enterprise", "cybersecurity"],
+      "category": "tech"
+    },
+    {
+      "id": "hackread",
+      "name": "HackRead",
+      "description": "Cybersecurity and hacking news",
+      "feedUrl": "https://www.hackread.com/feed/",
+      "siteUrl": "https://hackread.com",
+      "keywords": ["security", "hacking", "data breaches"],
+      "category": "tech"
+    },
+    {
+      "id": "wired-security",
+      "name": "Wired Security",
+      "description": "Security news from Wired",
+      "feedUrl": "https://www.wired.com/feed/category/security/latest/rss",
+      "siteUrl": "https://wired.com/category/security",
+      "keywords": ["security", "privacy", "hacking", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "a16z",
+      "name": "a16z",
+      "description": "Andreessen Horowitz insights",
+      "feedUrl": "https://a16z.com/feed/",
+      "siteUrl": "https://a16z.com",
+      "keywords": ["vc", "startups", "tech", "investing", "crypto"],
+      "category": "tech"
+    },
+    {
+      "id": "firstround",
+      "name": "First Round Review",
+      "description": "Startup advice and insights",
+      "feedUrl": "https://review.firstround.com/feed.xml",
+      "siteUrl": "https://review.firstround.com",
+      "keywords": ["startups", "management", "vc", "advice"],
+      "category": "business"
+    },
+    {
+      "id": "bothsidesofthetable",
+      "name": "Both Sides of the Table",
+      "description": "VC perspectives by Mark Suster",
+      "feedUrl": "https://bothsidesofthetable.com/feed",
+      "siteUrl": "https://bothsidesofthetable.com",
+      "keywords": ["vc", "startups", "entrepreneurship"],
+      "category": "business"
+    },
+    {
+      "id": "paulgraham",
+      "name": "Paul Graham Essays",
+      "description": "Essays on startups and programming",
+      "feedUrl": "http://www.aaronsw.com/2002/feeds/pgessays.rss",
+      "siteUrl": "http://paulgraham.com",
+      "keywords": ["startups", "programming", "essays", "ycombinator"],
+      "category": "tech"
+    },
+    {
+      "id": "waitbutwhy",
+      "name": "Wait But Why",
+      "description": "Long-form explainers on big topics",
+      "feedUrl": "https://waitbutwhy.com/feed",
+      "siteUrl": "https://waitbutwhy.com",
+      "keywords": ["essays", "science", "philosophy", "ai"],
+      "category": "culture"
+    },
+    {
+      "id": "astralcodexten",
+      "name": "Astral Codex Ten",
+      "description": "Rationalist blog by Scott Alexander",
+      "feedUrl": "https://astralcodexten.substack.com/feed",
+      "siteUrl": "https://astralcodexten.substack.com",
+      "keywords": ["rationalism", "science", "society", "philosophy"],
+      "category": "culture"
+    },
+    {
+      "id": "marginalrevolution",
+      "name": "Marginal Revolution",
+      "description": "Economics blog by Tyler Cowen",
+      "feedUrl": "https://marginalrevolution.com/feed",
+      "siteUrl": "https://marginalrevolution.com",
+      "keywords": ["economics", "culture", "books", "food"],
+      "category": "culture"
+    },
+    {
+      "id": "overcomingbias",
+      "name": "Overcoming Bias",
+      "description": "Robin Hanson on biases and prediction",
+      "feedUrl": "https://www.overcomingbias.com/feed",
+      "siteUrl": "https://overcomingbias.com",
+      "keywords": ["rationalism", "prediction", "economics"],
+      "category": "culture"
+    },
+    {
+      "id": "lesswrong",
+      "name": "LessWrong",
+      "description": "Rationality and AI alignment",
+      "feedUrl": "https://www.lesswrong.com/feed.xml",
+      "siteUrl": "https://lesswrong.com",
+      "keywords": ["rationalism", "ai", "alignment", "philosophy"],
+      "category": "tech"
+    },
+    {
+      "id": "gwern",
+      "name": "Gwern",
+      "description": "Essays on varied topics",
+      "feedUrl": "https://gwern.net/atom.xml",
+      "siteUrl": "https://gwern.net",
+      "keywords": ["essays", "research", "ai", "statistics"],
+      "category": "culture"
+    },
+    {
+      "id": "moneycontrol",
+      "name": "Moneycontrol",
+      "description": "Indian financial news",
+      "feedUrl": "https://www.moneycontrol.com/rss/latestnews.xml",
+      "siteUrl": "https://moneycontrol.com",
+      "keywords": ["india", "finance", "stocks", "markets"],
+      "category": "finance"
+    },
+    {
+      "id": "economictimes",
+      "name": "Economic Times",
+      "description": "Indian business news",
+      "feedUrl": "https://economictimes.indiatimes.com/rssfeedsdefault.cms",
+      "siteUrl": "https://economictimes.indiatimes.com",
+      "keywords": ["india", "business", "economy", "markets"],
+      "category": "business"
+    },
+    {
+      "id": "aljazeera",
+      "name": "Al Jazeera",
+      "description": "News from Al Jazeera",
+      "feedUrl": "https://www.aljazeera.com/xml/rss/all.xml",
+      "siteUrl": "https://aljazeera.com",
+      "keywords": ["news", "world", "middle east", "international"],
+      "category": "news"
+    },
+    {
+      "id": "scmp",
+      "name": "South China Morning Post",
+      "description": "News from Asia",
+      "feedUrl": "https://www.scmp.com/rss/91/feed",
+      "siteUrl": "https://scmp.com",
+      "keywords": ["news", "asia", "china", "hong kong"],
+      "category": "news"
+    },
+    {
+      "id": "japantimes",
+      "name": "The Japan Times",
+      "description": "News from Japan",
+      "feedUrl": "https://www.japantimes.co.jp/feed/",
+      "siteUrl": "https://japantimes.co.jp",
+      "keywords": ["news", "japan", "asia"],
+      "category": "news"
+    },
+    {
+      "id": "dw",
+      "name": "Deutsche Welle",
+      "description": "News from Germany",
+      "feedUrl": "https://rss.dw.com/rss/englishnews",
+      "siteUrl": "https://dw.com",
+      "keywords": ["news", "germany", "europe", "international"],
+      "category": "news"
+    },
+    {
+      "id": "france24",
+      "name": "France 24",
+      "description": "International news from France",
+      "feedUrl": "https://www.france24.com/en/rss",
+      "siteUrl": "https://france24.com",
+      "keywords": ["news", "france", "europe", "international"],
+      "category": "news"
+    },
+    {
+      "id": "devto",
+      "name": "DEV Community",
+      "description": "Programming articles and tutorials",
+      "feedUrl": "https://dev.to/feed",
+      "siteUrl": "https://dev.to",
+      "keywords": ["programming", "webdev", "javascript", "tutorials"],
+      "category": "programming"
+    },
+    {
+      "id": "css-tricks",
+      "name": "CSS-Tricks",
+      "description": "Web development tips",
+      "feedUrl": "https://css-tricks.com/feed/",
+      "siteUrl": "https://css-tricks.com",
+      "keywords": ["css", "webdev", "frontend", "javascript"],
+      "category": "programming"
+    },
+    {
+      "id": "smashingmagazine",
+      "name": "Smashing Magazine",
+      "description": "Web design and development",
+      "feedUrl": "https://www.smashingmagazine.com/feed/",
+      "siteUrl": "https://smashingmagazine.com",
+      "keywords": ["webdev", "design", "ux", "frontend"],
+      "category": "programming"
+    },
+    {
+      "id": "alistapart",
+      "name": "A List Apart",
+      "description": "Web design, development, and strategy",
+      "feedUrl": "https://alistapart.com/main/feed/",
+      "siteUrl": "https://alistapart.com",
+      "keywords": ["webdev", "design", "ux", "standards"],
+      "category": "programming"
+    },
+    {
+      "id": "codinghorror",
+      "name": "Coding Horror",
+      "description": "Programming blog by Jeff Atwood",
+      "feedUrl": "https://blog.codinghorror.com/rss/",
+      "siteUrl": "https://blog.codinghorror.com",
+      "keywords": ["programming", "software", "career"],
+      "category": "programming"
+    },
+    {
+      "id": "joelonsoftware",
+      "name": "Joel on Software",
+      "description": "Software development insights",
+      "feedUrl": "https://www.joelonsoftware.com/feed/",
+      "siteUrl": "https://joelonsoftware.com",
+      "keywords": ["software", "management", "programming"],
+      "category": "programming"
+    },
+    {
+      "id": "martinfowler",
+      "name": "Martin Fowler",
+      "description": "Software architecture and design",
+      "feedUrl": "https://martinfowler.com/feed.atom",
+      "siteUrl": "https://martinfowler.com",
+      "keywords": ["software", "architecture", "refactoring", "agile"],
+      "category": "programming"
+    },
+    {
+      "id": "highscalability",
+      "name": "High Scalability",
+      "description": "Building scalable systems",
+      "feedUrl": "http://highscalability.com/rss.xml",
+      "siteUrl": "http://highscalability.com",
+      "keywords": ["architecture", "scalability", "distributed systems"],
+      "category": "programming"
+    },
+    {
+      "id": "infoq",
+      "name": "InfoQ",
+      "description": "Software development news",
+      "feedUrl": "https://feed.infoq.com/",
+      "siteUrl": "https://infoq.com",
+      "keywords": ["software", "architecture", "devops", "cloud"],
+      "category": "programming"
+    },
+    {
+      "id": "hackernoon",
+      "name": "HackerNoon",
+      "description": "Tech stories and tutorials",
+      "feedUrl": "https://hackernoon.com/feed",
+      "siteUrl": "https://hackernoon.com",
+      "keywords": ["tech", "programming", "startups", "tutorials"],
+      "category": "programming"
+    },
+    {
+      "id": "lobsters",
+      "name": "Lobsters",
+      "description": "Computing-focused link aggregator",
+      "feedUrl": "https://lobste.rs/rss",
+      "siteUrl": "https://lobste.rs",
+      "keywords": ["programming", "tech", "linux", "systems"],
+      "category": "programming"
+    },
+    {
+      "id": "tldrnewsletter",
+      "name": "TLDR Newsletter",
+      "description": "Daily tech newsletter",
+      "feedUrl": "https://tldr.tech/rss",
+      "siteUrl": "https://tldr.tech",
+      "keywords": ["tech", "news", "startups", "programming"],
+      "category": "tech"
+    },
+    {
+      "id": "morningbrew",
+      "name": "Morning Brew",
+      "description": "Daily business newsletter",
+      "feedUrl": "https://www.morningbrew.com/daily/rss",
+      "siteUrl": "https://morningbrew.com",
+      "keywords": ["business", "news", "finance", "tech"],
+      "category": "business"
+    },
+    {
+      "id": "openai-blog",
+      "name": "OpenAI Blog",
+      "description": "AI research from OpenAI",
+      "feedUrl": "https://openai.com/blog/rss/",
+      "siteUrl": "https://openai.com/blog",
+      "keywords": ["ai", "machine learning", "gpt", "research"],
+      "category": "tech"
+    },
+    {
+      "id": "deepmind-blog",
+      "name": "DeepMind Blog",
+      "description": "AI research from DeepMind",
+      "feedUrl": "https://deepmind.google/blog/rss.xml",
+      "siteUrl": "https://deepmind.google/blog",
+      "keywords": ["ai", "machine learning", "research", "google"],
+      "category": "tech"
+    },
+    {
+      "id": "anthropic-blog",
+      "name": "Anthropic Blog",
+      "description": "AI safety and research",
+      "feedUrl": "https://www.anthropic.com/feed.xml",
+      "siteUrl": "https://anthropic.com",
+      "keywords": ["ai", "safety", "claude", "research"],
+      "category": "tech"
+    },
+    {
+      "id": "huggingface-blog",
+      "name": "Hugging Face Blog",
+      "description": "ML models and tools",
+      "feedUrl": "https://huggingface.co/blog/feed.xml",
+      "siteUrl": "https://huggingface.co/blog",
+      "keywords": ["ai", "machine learning", "nlp", "open source"],
+      "category": "tech"
+    },
+    {
+      "id": "distill",
+      "name": "Distill",
+      "description": "Clear explanations of ML research",
+      "feedUrl": "https://distill.pub/rss.xml",
+      "siteUrl": "https://distill.pub",
+      "keywords": ["ai", "machine learning", "visualization", "research"],
+      "category": "tech"
+    },
+    {
+      "id": "importai",
+      "name": "Import AI",
+      "description": "Weekly AI newsletter",
+      "feedUrl": "https://jack-clark.net/feed/",
+      "siteUrl": "https://jack-clark.net",
+      "keywords": ["ai", "newsletter", "research", "policy"],
+      "category": "tech"
+    },
+    {
+      "id": "theaidigest",
+      "name": "The AI Digest",
+      "description": "AI news and analysis",
+      "feedUrl": "https://theaidigest.org/feed",
+      "siteUrl": "https://theaidigest.org",
+      "keywords": ["ai", "news", "machine learning"],
+      "category": "tech"
+    },
+    {
+      "id": "rust-blog",
+      "name": "Rust Blog",
+      "description": "Official Rust language blog",
+      "feedUrl": "https://blog.rust-lang.org/feed.xml",
+      "siteUrl": "https://blog.rust-lang.org",
+      "keywords": ["rust", "programming", "systems"],
+      "category": "programming"
+    },
+    {
+      "id": "go-blog",
+      "name": "Go Blog",
+      "description": "Official Go language blog",
+      "feedUrl": "https://go.dev/blog/feed.atom",
+      "siteUrl": "https://go.dev/blog",
+      "keywords": ["go", "golang", "programming"],
+      "category": "programming"
+    },
+    {
+      "id": "python-blog",
+      "name": "Python Insider",
+      "description": "Official Python blog",
+      "feedUrl": "https://blog.python.org/feeds/posts/default",
+      "siteUrl": "https://blog.python.org",
+      "keywords": ["python", "programming"],
+      "category": "programming"
+    },
+    {
+      "id": "realpython",
+      "name": "Real Python",
+      "description": "Python tutorials and tips",
+      "feedUrl": "https://realpython.com/atom.xml",
+      "siteUrl": "https://realpython.com",
+      "keywords": ["python", "tutorials", "programming"],
+      "category": "programming"
+    },
+    {
+      "id": "javascript-weekly",
+      "name": "JavaScript Weekly",
+      "description": "JavaScript news and articles",
+      "feedUrl": "https://javascriptweekly.com/rss/",
+      "siteUrl": "https://javascriptweekly.com",
+      "keywords": ["javascript", "webdev", "nodejs"],
+      "category": "programming"
+    },
+    {
+      "id": "react-blog",
+      "name": "React Blog",
+      "description": "Official React blog",
+      "feedUrl": "https://react.dev/rss.xml",
+      "siteUrl": "https://react.dev/blog",
+      "keywords": ["react", "javascript", "frontend"],
+      "category": "programming"
+    },
+    {
+      "id": "vercel-blog",
+      "name": "Vercel Blog",
+      "description": "Frontend and Next.js updates",
+      "feedUrl": "https://vercel.com/atom",
+      "siteUrl": "https://vercel.com/blog",
+      "keywords": ["nextjs", "vercel", "frontend", "react"],
+      "category": "programming"
+    },
+    {
+      "id": "netflixtech",
+      "name": "Netflix Tech Blog",
+      "description": "Engineering at Netflix",
+      "feedUrl": "https://netflixtechblog.com/feed",
+      "siteUrl": "https://netflixtechblog.com",
+      "keywords": ["engineering", "streaming", "microservices", "java"],
+      "category": "programming"
+    },
+    {
+      "id": "uber-eng",
+      "name": "Uber Engineering",
+      "description": "Engineering at Uber",
+      "feedUrl": "https://www.uber.com/blog/engineering/rss/",
+      "siteUrl": "https://uber.com/blog/engineering",
+      "keywords": ["engineering", "go", "microservices", "mobile"],
+      "category": "programming"
+    },
+    {
+      "id": "airbnb-eng",
+      "name": "Airbnb Engineering",
+      "description": "Engineering at Airbnb",
+      "feedUrl": "https://medium.com/feed/airbnb-engineering",
+      "siteUrl": "https://medium.com/airbnb-engineering",
+      "keywords": ["engineering", "react", "data", "ml"],
+      "category": "programming"
+    },
+    {
+      "id": "stripe-blog",
+      "name": "Stripe Blog",
+      "description": "Payments and engineering at Stripe",
+      "feedUrl": "https://stripe.com/blog/feed.rss",
+      "siteUrl": "https://stripe.com/blog",
+      "keywords": ["payments", "fintech", "engineering", "ruby"],
+      "category": "programming"
+    },
+    {
+      "id": "github-blog",
+      "name": "GitHub Blog",
+      "description": "GitHub product and engineering",
+      "feedUrl": "https://github.blog/feed/",
+      "siteUrl": "https://github.blog",
+      "keywords": ["github", "git", "open source", "devtools"],
+      "category": "programming"
+    },
+    {
+      "id": "gitlab-blog",
+      "name": "GitLab Blog",
+      "description": "GitLab product and engineering",
+      "feedUrl": "https://about.gitlab.com/atom.xml",
+      "siteUrl": "https://about.gitlab.com/blog",
+      "keywords": ["gitlab", "devops", "cicd", "open source"],
+      "category": "programming"
+    },
+    {
+      "id": "aws-news",
+      "name": "AWS News Blog",
+      "description": "AWS product announcements",
+      "feedUrl": "https://aws.amazon.com/blogs/aws/feed/",
+      "siteUrl": "https://aws.amazon.com/blogs/aws",
+      "keywords": ["aws", "cloud", "serverless", "devops"],
+      "category": "programming"
+    },
+    {
+      "id": "google-cloud-blog",
+      "name": "Google Cloud Blog",
+      "description": "Google Cloud updates",
+      "feedUrl": "https://cloud.google.com/feeds/blog.xml",
+      "siteUrl": "https://cloud.google.com/blog",
+      "keywords": ["gcp", "cloud", "kubernetes", "ai"],
+      "category": "programming"
+    },
+    {
+      "id": "azure-blog",
+      "name": "Azure Blog",
+      "description": "Microsoft Azure updates",
+      "feedUrl": "https://azure.microsoft.com/en-us/blog/feed/",
+      "siteUrl": "https://azure.microsoft.com/blog",
+      "keywords": ["azure", "cloud", "microsoft", "devops"],
+      "category": "programming"
+    },
+    {
+      "id": "cloudflare-blog",
+      "name": "Cloudflare Blog",
+      "description": "Web performance and security",
+      "feedUrl": "https://blog.cloudflare.com/rss/",
+      "siteUrl": "https://blog.cloudflare.com",
+      "keywords": ["cloudflare", "cdn", "security", "edge"],
+      "category": "programming"
+    },
+    {
+      "id": "digitalocean-blog",
+      "name": "DigitalOcean Blog",
+      "description": "Cloud and DevOps tutorials",
+      "feedUrl": "https://www.digitalocean.com/blog/feed",
+      "siteUrl": "https://digitalocean.com/blog",
+      "keywords": ["cloud", "tutorials", "devops", "linux"],
+      "category": "programming"
+    },
+    {
+      "id": "kubernetes-blog",
+      "name": "Kubernetes Blog",
+      "description": "Official Kubernetes blog",
+      "feedUrl": "https://kubernetes.io/feed.xml",
+      "siteUrl": "https://kubernetes.io/blog",
+      "keywords": ["kubernetes", "containers", "devops", "cloud"],
+      "category": "programming"
+    },
+    {
+      "id": "docker-blog",
+      "name": "Docker Blog",
+      "description": "Docker product updates",
+      "feedUrl": "https://www.docker.com/feed/",
+      "siteUrl": "https://docker.com/blog",
+      "keywords": ["docker", "containers", "devops"],
+      "category": "programming"
+    },
+    {
+      "id": "hashicorp-blog",
+      "name": "HashiCorp Blog",
+      "description": "Infrastructure tools and updates",
+      "feedUrl": "https://www.hashicorp.com/feed.xml",
+      "siteUrl": "https://hashicorp.com/blog",
+      "keywords": ["terraform", "vault", "devops", "infrastructure"],
+      "category": "programming"
+    },
+    {
+      "id": "designernews",
+      "name": "Designer News",
+      "description": "Design community links",
+      "feedUrl": "https://www.designernews.co/rss",
+      "siteUrl": "https://designernews.co",
+      "keywords": ["design", "ux", "ui", "product"],
+      "category": "design"
+    },
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "description": "Best design links daily",
+      "feedUrl": "https://sidebar.io/feed.xml",
+      "siteUrl": "https://sidebar.io",
+      "keywords": ["design", "ux", "ui", "curated"],
+      "category": "design"
+    },
+    {
+      "id": "uxdesign",
+      "name": "UX Collective",
+      "description": "UX design articles",
+      "feedUrl": "https://uxdesign.cc/feed",
+      "siteUrl": "https://uxdesign.cc",
+      "keywords": ["ux", "design", "product", "research"],
+      "category": "design"
+    },
+    {
+      "id": "nngroup",
+      "name": "Nielsen Norman Group",
+      "description": "UX research and guidelines",
+      "feedUrl": "https://www.nngroup.com/feed/rss/",
+      "siteUrl": "https://nngroup.com",
+      "keywords": ["ux", "usability", "research", "design"],
+      "category": "design"
+    },
+    {
+      "id": "uxplanet",
+      "name": "UX Planet",
+      "description": "UX design resources",
+      "feedUrl": "https://uxplanet.org/feed",
+      "siteUrl": "https://uxplanet.org",
+      "keywords": ["ux", "design", "tutorials", "ui"],
+      "category": "design"
+    },
+    {
+      "id": "codrops",
+      "name": "Codrops",
+      "description": "Web design inspirations",
+      "feedUrl": "https://tympanus.net/codrops/feed/",
+      "siteUrl": "https://tympanus.net/codrops",
+      "keywords": ["design", "css", "webdev", "tutorials"],
+      "category": "design"
+    },
+    {
+      "id": "webdesignernews",
+      "name": "Web Designer News",
+      "description": "Web design curated links",
+      "feedUrl": "https://www.webdesignernews.com/feed",
+      "siteUrl": "https://webdesignernews.com",
+      "keywords": ["design", "webdev", "css", "curated"],
+      "category": "design"
+    },
+    {
+      "id": "producthunt",
+      "name": "Product Hunt",
+      "description": "New tech products daily",
+      "feedUrl": "https://www.producthunt.com/feed",
+      "siteUrl": "https://producthunt.com",
+      "keywords": ["products", "startups", "apps", "tech"],
+      "category": "tech"
+    },
+    {
+      "id": "betalist",
+      "name": "BetaList",
+      "description": "Startup beta launches",
+      "feedUrl": "https://betalist.com/feed",
+      "siteUrl": "https://betalist.com",
+      "keywords": ["startups", "beta", "products", "early access"],
+      "category": "tech"
+    },
+    {
+      "id": "indyhackers",
+      "name": "Indie Hackers",
+      "description": "Bootstrapped founders community",
+      "feedUrl": "https://www.indiehackers.com/feed.xml",
+      "siteUrl": "https://indiehackers.com",
+      "keywords": ["indie", "bootstrapping", "startups", "saas"],
+      "category": "business"
+    },
+    {
+      "id": "ycombinator",
+      "name": "Y Combinator Blog",
+      "description": "Startup accelerator blog",
+      "feedUrl": "https://www.ycombinator.com/blog/rss/",
+      "siteUrl": "https://ycombinator.com/blog",
+      "keywords": ["startups", "vc", "ycombinator", "advice"],
+      "category": "business"
+    },
+    {
+      "id": "sethmgodin",
+      "name": "Seth Godin's Blog",
+      "description": "Marketing and leadership",
+      "feedUrl": "https://seths.blog/feed/",
+      "siteUrl": "https://seths.blog",
+      "keywords": ["marketing", "leadership", "business", "ideas"],
+      "category": "business"
+    },
+    {
+      "id": "eff",
+      "name": "EFF",
+      "description": "Digital rights and privacy",
+      "feedUrl": "https://www.eff.org/rss/updates.xml",
+      "siteUrl": "https://eff.org",
+      "keywords": ["privacy", "rights", "tech policy", "freedom"],
+      "category": "tech"
+    },
+    {
+      "id": "techdirt",
+      "name": "Techdirt",
+      "description": "Tech policy and law",
+      "feedUrl": "https://www.techdirt.com/feed/",
+      "siteUrl": "https://techdirt.com",
+      "keywords": ["tech policy", "copyright", "law", "privacy"],
+      "category": "tech"
+    },
+    {
+      "id": "restofworld",
+      "name": "Rest of World",
+      "description": "Tech outside the West",
+      "feedUrl": "https://restofworld.org/feed/",
+      "siteUrl": "https://restofworld.org",
+      "keywords": ["tech", "global", "emerging markets", "international"],
+      "category": "tech"
+    },
+    {
+      "id": "protocol",
+      "name": "Protocol",
+      "description": "Tech industry news",
+      "feedUrl": "https://www.protocol.com/feeds/feed.rss",
+      "siteUrl": "https://protocol.com",
+      "keywords": ["tech", "policy", "enterprise", "big tech"],
+      "category": "tech"
+    },
+    {
+      "id": "platformer",
+      "name": "Platformer",
+      "description": "Tech platform news by Casey Newton",
+      "feedUrl": "https://www.platformer.news/rss/",
+      "siteUrl": "https://platformer.news",
+      "keywords": ["tech", "social media", "platforms", "policy"],
+      "category": "tech"
+    },
+    {
+      "id": "themarkup",
+      "name": "The Markup",
+      "description": "Tech accountability journalism",
+      "feedUrl": "https://themarkup.org/feeds/rss.xml",
+      "siteUrl": "https://themarkup.org",
+      "keywords": ["tech", "privacy", "data", "investigations"],
+      "category": "tech"
+    },
+    {
+      "id": "404media",
+      "name": "404 Media",
+      "description": "Tech, science, internet culture",
+      "feedUrl": "https://www.404media.co/rss/",
+      "siteUrl": "https://404media.co",
+      "keywords": ["tech", "internet", "culture", "investigations"],
+      "category": "tech"
+    }
+  ]
+}

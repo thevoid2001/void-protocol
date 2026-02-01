@@ -1,0 +1,30 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["src/data/**"]
+
+# Redirect API calls to functions
+[[redirects]]
+  from = "/api/search"
+  to = "/.netlify/functions/search"
+  status = 200
+
+[[redirects]]
+  from = "/api/detect"
+  to = "/.netlify/functions/detect"
+  status = 200
+
+[[redirects]]
+  from = "/api/fetch"
+  to = "/.netlify/functions/fetch"
+  status = 200
+
+# SPA fallback - must be last
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

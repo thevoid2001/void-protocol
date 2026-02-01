@@ -13,6 +13,7 @@
     "@coral-xyz/anchor": "^0.32.1",
     "@irys/web-upload": "^0.0.15",
     "@irys/web-upload-solana": "^0.1.8",
+    "@netlify/functions": "^2.6.0",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
     "@solana/wallet-adapter-react-ui": "^0.9.39",
@@ -21,7 +22,8 @@
     "jspdf": "^4.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.13.0",
+    "rss-parser": "^3.13.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

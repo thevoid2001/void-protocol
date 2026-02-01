@@ -31,6 +31,9 @@ export function NavBar() {
           <Link to="/burn" className={`text-sm transition ${isActive("/burn")}`}>
             Burn
           </Link>
+          <Link to="/feed" className={`text-sm transition ${isActive("/feed")}`}>
+            Feed
+          </Link>
           <WalletMultiButton />
         </div>
       </div>

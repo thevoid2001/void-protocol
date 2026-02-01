@@ -9,6 +9,9 @@ import { DropDashboardPage } from "./pages/DropDashboard.tsx";
 import { BurnPage } from "./pages/Burn.tsx";
 import { BurnSendPage } from "./pages/BurnSend.tsx";
 import { BurnInboxPage } from "./pages/BurnInbox.tsx";
+import { FeedPage } from "./pages/Feed.tsx";
+import { FeedSourcesPage } from "./pages/FeedSources.tsx";
+import { FeedSavedPage } from "./pages/FeedSaved.tsx";
 
 export default function App() {
   return (
@@ -25,6 +28,9 @@ export default function App() {
           <Route path="/burn" element={<BurnPage />} />
           <Route path="/burn/send" element={<BurnSendPage />} />
           <Route path="/burn/inbox" element={<BurnInboxPage />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/feed/sources" element={<FeedSourcesPage />} />
+          <Route path="/feed/saved" element={<FeedSavedPage />} />
         </Routes>
       </div>
     </BrowserRouter>

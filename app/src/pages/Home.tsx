@@ -38,13 +38,6 @@ export function HomePage() {
           </p>
         </Link>
 
-        <div className="rounded-lg border border-void-border/50 p-6 opacity-40">
-          <h2 className="mb-1 text-lg font-medium text-white">Void Switch</h2>
-          <p className="text-sm text-[#888888]">
-            Dead man's switch. Coming soon.
-          </p>
-        </div>
-
         <Link
           to="/burn"
           className="group rounded-lg border border-void-border p-6 transition hover:border-void-accent/30 hover:bg-void-accent/5"
@@ -56,6 +49,25 @@ export function HomePage() {
             Wallet-to-wallet encrypted messaging with optional burn.
           </p>
         </Link>
+
+        <Link
+          to="/feed"
+          className="group rounded-lg border border-void-border p-6 transition hover:border-void-accent/30 hover:bg-void-accent/5"
+        >
+          <h2 className="mb-1 text-lg font-medium text-white group-hover:text-void-accent">
+            Void Feed
+          </h2>
+          <p className="text-sm text-[#888888]">
+            Private RSS reader. No algorithms, no tracking.
+          </p>
+        </Link>
+
+        <div className="rounded-lg border border-void-border/50 p-6 opacity-40">
+          <h2 className="mb-1 text-lg font-medium text-white">Void Switch</h2>
+          <p className="text-sm text-[#888888]">
+            Dead man's switch. Coming soon.
+          </p>
+        </div>
       </div>
 
       <p className="mt-16 text-xs text-[#888888]/50">
