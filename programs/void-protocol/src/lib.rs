@@ -138,6 +138,25 @@ pub mod void_protocol {
         msg.burned = true;
         Ok(())
     }
+
+    // ─── VOID FEED (VOUCH) ─────────────────────────────────────────
+
+    /// Vouch for an article. The content_hash is a SHA-256 of the article URL.
+    /// Each wallet can only vouch once per article (enforced by PDA).
+    pub fn vouch(ctx: Context<CreateVouch>, content_hash: [u8; 32]) -> Result<()> {
+        let vouch = &mut ctx.accounts.vouch;
+        vouch.voucher = ctx.accounts.voucher.key();
+        vouch.content_hash = content_hash;
+        vouch.timestamp = Clock::get()?.unix_timestamp;
+        vouch.bump = ctx.bumps.vouch;
+        Ok(())
+    }
+
+    /// Remove a vouch (only the voucher can remove their own vouch).
+    pub fn unvouch(_ctx: Context<RemoveVouch>) -> Result<()> {
+        // Account will be closed and rent returned to voucher
+        Ok(())
+    }
 }
 
 // ─── ERRORS ─────────────────────────────────────────────────────
@@ -372,4 +391,51 @@ pub struct BurnMessage<'info> {
     pub message: Account<'info, DirectMessage>,
 
     pub recipient: Signer<'info>,
+}
+
+// ─── VOID FEED (VOUCH) ACCOUNTS ────────────────────────────────
+
+/// A vouch for an article. Proves a wallet found content valuable.
+/// Size: 8 (discriminator) + 32 (voucher) + 32 (content_hash) + 8 (timestamp) + 1 (bump) = 81 bytes
+#[account]
+pub struct Vouch {
+    /// The wallet that vouched
+    pub voucher: Pubkey,
+    /// SHA-256 hash of the article URL
+    pub content_hash: [u8; 32],
+    /// When the vouch was made
+    pub timestamp: i64,
+    /// PDA bump
+    pub bump: u8,
+}
+
+#[derive(Accounts)]
+#[instruction(content_hash: [u8; 32])]
+pub struct CreateVouch<'info> {
+    #[account(
+        init,
+        payer = voucher,
+        space = 8 + 32 + 32 + 8 + 1,
+        seeds = [b"vouch", voucher.key().as_ref(), content_hash.as_ref()],
+        bump
+    )]
+    pub vouch: Account<'info, Vouch>,
+
+    #[account(mut)]
+    pub voucher: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct RemoveVouch<'info> {
+    #[account(
+        mut,
+        close = voucher,
+        constraint = vouch.voucher == voucher.key()
+    )]
+    pub vouch: Account<'info, Vouch>,
+
+    #[account(mut)]
+    pub voucher: Signer<'info>,
 }

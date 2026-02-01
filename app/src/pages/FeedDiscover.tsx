@@ -1,10 +1,13 @@
 import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import feedIndex from "../data/feedIndex.json";
 import {
   useFeedData,
   Article,
 } from "../utils/useFeedData.ts";
+import { VouchButton } from "../components/VouchButton.tsx";
 
 interface IndexedFeed {
   id: string;
@@ -30,6 +33,7 @@ const CATEGORIES = [
 
 export function FeedDiscoverPage() {
   const { sources, createSource, createTopic, topics } = useFeedData();
+  const { connected } = useWallet();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -141,13 +145,25 @@ export function FeedDiscoverPage() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Discover</h1>
-        <Link
-          to="/feed/my"
-          className="rounded-lg border border-void-border px-4 py-2 text-sm text-[#888888] transition hover:border-[#888888] hover:text-white"
-        >
-          My Feed
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/feed/my"
+            className="rounded-lg border border-void-border px-4 py-2 text-sm text-[#888888] transition hover:border-[#888888] hover:text-white"
+          >
+            My Feed
+          </Link>
+          {!connected && <WalletMultiButton />}
+        </div>
       </div>
+
+      {/* Vouch explainer when wallet connected */}
+      {connected && articles.length === 0 && !loading && !searchQuery && (
+        <div className="mb-6 rounded-lg border border-void-accent/30 bg-void-accent/5 p-4">
+          <p className="text-sm text-void-accent">
+            Wallet connected. You can now <strong>vouch</strong> for articles you find valuable.
+          </p>
+        </div>
+      )}
 
       {/* Search bar */}
       <div className="mb-6 flex gap-2">
@@ -257,6 +273,11 @@ export function FeedDiscoverPage() {
                   </p>
                 )}
               </a>
+              {connected && (
+                <div className="mt-3 flex justify-end">
+                  <VouchButton articleUrl={article.link} articleTitle={article.title} />
+                </div>
+              )}
             </article>
           ))}
         </div>
