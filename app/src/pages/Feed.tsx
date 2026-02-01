@@ -84,22 +84,27 @@ export function FeedPage() {
   if (sources.length === 0 && !loading) {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12">
-        <h1 className="mb-2 text-2xl font-semibold">Void Feed</h1>
-        <p className="mb-8 text-[#888888]">
-          Your private RSS reader. No algorithms, no tracking, no bullshit.
-        </p>
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">My Feed</h1>
+          <Link
+            to="/feed"
+            className="rounded-lg border border-void-border px-4 py-2 text-sm text-[#888888] transition hover:border-[#888888] hover:text-white"
+          >
+            Discover
+          </Link>
+        </div>
 
         <div className="rounded-lg border border-void-border p-8 text-center">
           <div className="mb-4 text-6xl opacity-30">📡</div>
-          <h2 className="mb-2 text-lg font-medium">Your feed is empty</h2>
+          <h2 className="mb-2 text-lg font-medium">Your personal feed is empty</h2>
           <p className="mb-6 text-sm text-[#888888]">
-            Add sources to get started. Search our index or paste any website URL.
+            Discover content and add sources you like to build your personal feed.
           </p>
           <Link
-            to="/feed/sources"
+            to="/feed"
             className="inline-block rounded-lg bg-void-accent px-6 py-3 text-sm font-medium text-black transition hover:bg-void-accent/90"
           >
-            Add Sources
+            Discover Sources
           </Link>
         </div>
 
@@ -139,8 +144,17 @@ export function FeedPage() {
     <div className="mx-auto max-w-2xl px-6 py-12">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Void Feed</h1>
+        <h1 className="text-2xl font-semibold">My Feed</h1>
         <div className="flex items-center gap-3">
+          <Link
+            to="/feed"
+            className="rounded-lg border border-void-border p-2 text-[#888888] transition hover:border-[#888888] hover:text-white"
+            title="Discover"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </Link>
           <button
             onClick={loadArticles}
             disabled={refreshing}
