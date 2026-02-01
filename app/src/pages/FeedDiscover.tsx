@@ -7,7 +7,7 @@ import {
   useFeedData,
   Article,
 } from "../utils/useFeedData.ts";
-import { VouchButton } from "../components/VouchButton.tsx";
+import { VouchButton, VouchCount } from "../components/VouchButton.tsx";
 
 interface IndexedFeed {
   id: string;
@@ -273,11 +273,13 @@ export function FeedDiscoverPage() {
                   </p>
                 )}
               </a>
-              {connected && (
-                <div className="mt-3 flex justify-end">
+              <div className="mt-3 flex justify-end">
+                {connected ? (
                   <VouchButton articleUrl={article.link} articleTitle={article.title} />
-                </div>
-              )}
+                ) : (
+                  <VouchCount articleUrl={article.link} />
+                )}
+              </div>
             </article>
           ))}
         </div>

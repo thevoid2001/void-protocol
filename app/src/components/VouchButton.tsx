@@ -6,6 +6,7 @@ import { getProgram, PROGRAM_ID } from "../utils/program.ts";
 interface VouchButtonProps {
   articleUrl: string;
   articleTitle: string;
+  showCount?: boolean;
 }
 
 // Hash a string to get content_hash for the vouch
@@ -16,7 +17,21 @@ async function hashUrl(url: string): Promise<Uint8Array> {
   return new Uint8Array(hashBuffer);
 }
 
-export function VouchButton({ articleUrl, articleTitle }: VouchButtonProps) {
+// Fetch vouch count from API
+async function fetchVouchCount(articleUrl: string): Promise<number> {
+  try {
+    const response = await fetch(`/api/vouches?url=${encodeURIComponent(articleUrl)}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.count || 0;
+    }
+  } catch (e) {
+    console.error("Failed to fetch vouch count:", e);
+  }
+  return 0;
+}
+
+export function VouchButton({ articleUrl, articleTitle, showCount = true }: VouchButtonProps) {
   const [vouched, setVouched] = useState(false);
   const [vouchCount, setVouchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -25,36 +40,42 @@ export function VouchButton({ articleUrl, articleTitle }: VouchButtonProps) {
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 
-  // Check if user has already vouched for this article
-  const checkVouch = useCallback(async () => {
-    if (!anchorWallet) {
-      setChecking(false);
-      return;
+  // Check if user has already vouched and get count
+  const checkVouchStatus = useCallback(async () => {
+    setChecking(true);
+
+    // Fetch count (works without wallet)
+    if (showCount) {
+      const count = await fetchVouchCount(articleUrl);
+      setVouchCount(count);
     }
 
-    try {
-      const contentHash = await hashUrl(articleUrl);
-      const [vouchPDA] = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("vouch"),
-          anchorWallet.publicKey.toBuffer(),
-          Buffer.from(contentHash),
-        ],
-        PROGRAM_ID
-      );
+    // Check if current user vouched
+    if (anchorWallet) {
+      try {
+        const contentHash = await hashUrl(articleUrl);
+        const [vouchPDA] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from("vouch"),
+            anchorWallet.publicKey.toBuffer(),
+            Buffer.from(contentHash),
+          ],
+          PROGRAM_ID
+        );
 
-      const info = await connection.getAccountInfo(vouchPDA);
-      setVouched(info !== null);
-    } catch (e) {
-      console.error("Error checking vouch:", e);
-    } finally {
-      setChecking(false);
+        const info = await connection.getAccountInfo(vouchPDA);
+        setVouched(info !== null);
+      } catch (e) {
+        console.error("Error checking vouch:", e);
+      }
     }
-  }, [anchorWallet, connection, articleUrl]);
+
+    setChecking(false);
+  }, [anchorWallet, connection, articleUrl, showCount]);
 
   useEffect(() => {
-    checkVouch();
-  }, [checkVouch]);
+    checkVouchStatus();
+  }, [checkVouchStatus]);
 
   // Vouch for the article
   const handleVouch = async () => {
@@ -127,8 +148,28 @@ export function VouchButton({ articleUrl, articleTitle }: VouchButtonProps) {
     }
   };
 
-  // Don't show button if wallet not connected
+  // Show count even without wallet connected
   if (!anchorWallet) {
+    if (showCount && vouchCount > 0) {
+      return (
+        <div className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-[#505050]">
+          <svg
+            className="h-3.5 w-3.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <span>{vouchCount}</span>
+        </div>
+      );
+    }
     return null;
   }
 
@@ -174,5 +215,39 @@ export function VouchButton({ articleUrl, articleTitle }: VouchButtonProps) {
       <span>{vouched ? "Vouched" : "Vouch"}</span>
       {vouchCount > 0 && <span className="text-[#888888]">({vouchCount})</span>}
     </button>
+  );
+}
+
+// Standalone count display (for showing without wallet)
+export function VouchCount({ articleUrl }: { articleUrl: string }) {
+  const [count, setCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchVouchCount(articleUrl).then((c) => {
+      setCount(c);
+      setLoading(false);
+    });
+  }, [articleUrl]);
+
+  if (loading || count === 0) return null;
+
+  return (
+    <div className="flex items-center gap-1 text-xs text-[#888888]">
+      <svg
+        className="h-3 w-3"
+        fill="currentColor"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M5 13l4 4L19 7"
+        />
+      </svg>
+      <span>{count} vouched</span>
+    </div>
   );
 }
