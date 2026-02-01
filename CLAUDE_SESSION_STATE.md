@@ -32,9 +32,11 @@ A privacy-first RSS reader with on-chain vouching.
 - `app/src/pages/FeedSources.tsx` - Manage sources
 - `app/src/pages/FeedSaved.tsx` - Saved articles
 - `app/src/components/VouchButton.tsx` - Vouch button with counts
+- `app/src/components/TipButton.tsx` - Tip authors (SOL transfer)
 - `app/src/utils/feedStorage.ts` - Local storage management
 - `app/src/utils/useFeedData.ts` - React hook for feed data
-- `app/src/data/feedIndex.json` - 199 RSS feeds index
+- `app/src/data/feedIndex.json` - 224 RSS feeds index (includes 25 Substacks)
+- `app/src/data/tipRegistry.json` - Author wallet mapping for tips
 - `app/netlify/functions/search.ts` - Search feeds
 - `app/netlify/functions/detect.ts` - Auto-detect RSS from URL
 - `app/netlify/functions/fetch.ts` - Proxy RSS fetches
@@ -83,8 +85,10 @@ The follow wallet feature is built in the contract but not deployed yet (need ~0
 - [ ] Wallet profiles (opt-in visibility)
 - [ ] "Vouched by people I follow" filter
 
+### Completed (just now)
+- [x] Tip authors (send SOL) - TipButton component with tip registry
+
 ### Planned
-- [ ] Tip authors (send SOL)
 - [ ] Article annotations
 - [ ] Reading stats (local)
 - [ ] Keyboard navigation
