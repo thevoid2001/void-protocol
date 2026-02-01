@@ -8,6 +8,96 @@
   },
   "instructions": [
     {
+      "name": "activate_inbox",
+      "docs": [
+        "Activate an inbox for wallet-to-wallet encrypted messaging.",
+        "The user provides their derived encryption public key (65 bytes).",
+        "This key is derived client-side from a wallet signature."
+      ],
+      "discriminator": [
+        232,
+        182,
+        128,
+        1,
+        39,
+        250,
+        86,
+        122
+      ],
+      "accounts": [
+        {
+          "name": "inbox",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  110,
+                  98,
+                  111,
+                  120
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "encryption_key",
+          "type": {
+            "array": [
+              "u8",
+              65
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "burn_message",
+      "docs": [
+        "Mark a message as burned (recipient only).",
+        "Once burned, the message reference is flagged and cannot be \"unburned\"."
+      ],
+      "discriminator": [
+        248,
+        231,
+        17,
+        147,
+        9,
+        151,
+        57,
+        236
+      ],
+      "accounts": [
+        {
+          "name": "message",
+          "writable": true
+        },
+        {
+          "name": "recipient",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "create_organization",
       "docs": [
         "Create a new organization drop box.",
@@ -172,6 +262,73 @@
       "args": []
     },
     {
+      "name": "send_direct_message",
+      "docs": [
+        "Send an encrypted direct message to another wallet.",
+        "Recipient must have an activated inbox."
+      ],
+      "discriminator": [
+        153,
+        167,
+        191,
+        220,
+        204,
+        3,
+        95,
+        28
+      ],
+      "accounts": [
+        {
+          "name": "message",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  109
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "recipient_inbox.owner",
+                "account": "Inbox"
+              },
+              {
+                "kind": "account",
+                "path": "recipient_inbox.message_count",
+                "account": "Inbox"
+              }
+            ]
+          }
+        },
+        {
+          "name": "recipient_inbox",
+          "writable": true
+        },
+        {
+          "name": "sender",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "arweave_hash",
+          "type": "string"
+        },
+        {
+          "name": "burn_after_reading",
+          "type": "bool"
+        }
+      ]
+    },
+    {
       "name": "submit_tip",
       "docs": [
         "Submit an encrypted tip to an organization.",
@@ -241,9 +398,128 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "unvouch",
+      "docs": [
+        "Remove a vouch (only the voucher can remove their own vouch)."
+      ],
+      "discriminator": [
+        196,
+        230,
+        161,
+        123,
+        235,
+        3,
+        34,
+        245
+      ],
+      "accounts": [
+        {
+          "name": "vouch",
+          "writable": true
+        },
+        {
+          "name": "voucher",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "vouch",
+      "docs": [
+        "Vouch for an article. The content_hash is a SHA-256 of the article URL.",
+        "Each wallet can only vouch once per article (enforced by PDA)."
+      ],
+      "discriminator": [
+        87,
+        240,
+        8,
+        21,
+        219,
+        179,
+        242,
+        177
+      ],
+      "accounts": [
+        {
+          "name": "vouch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  111,
+                  117,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "voucher"
+              },
+              {
+                "kind": "arg",
+                "path": "content_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voucher",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "content_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
     }
   ],
   "accounts": [
+    {
+      "name": "DirectMessage",
+      "discriminator": [
+        28,
+        179,
+        21,
+        252,
+        131,
+        253,
+        204,
+        209
+      ]
+    },
+    {
+      "name": "Inbox",
+      "discriminator": [
+        41,
+        120,
+        76,
+        139,
+        162,
+        162,
+        166,
+        244
+      ]
+    },
     {
       "name": "Organization",
       "discriminator": [
@@ -282,6 +558,19 @@
         178,
         197
       ]
+    },
+    {
+      "name": "Vouch",
+      "discriminator": [
+        151,
+        175,
+        234,
+        54,
+        134,
+        101,
+        175,
+        210
+      ]
     }
   ],
   "errors": [
@@ -314,9 +603,135 @@
       "code": 6005,
       "name": "OrgInactive",
       "msg": "Organization is inactive"
+    },
+    {
+      "code": 6006,
+      "name": "AlreadyBurned",
+      "msg": "Message has already been burned"
     }
   ],
   "types": [
+    {
+      "name": "DirectMessage",
+      "docs": [
+        "A direct message reference. The encrypted content lives on Arweave.",
+        "Size: 8 + 8 + 32 + 32 + (4+64) + 1 + 1 + 8 + 1 = 159 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "docs": [
+              "Sequential ID within the recipient's inbox"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "sender",
+            "docs": [
+              "Who sent the message"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "recipient",
+            "docs": [
+              "Who receives the message"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "arweave_hash",
+            "docs": [
+              "Arweave transaction hash where encrypted content is stored"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "burn_after_reading",
+            "docs": [
+              "If true, recipient intends to burn after reading"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "burned",
+            "docs": [
+              "Whether the message has been burned"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "When the message was sent"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Inbox",
+      "docs": [
+        "A user's inbox for receiving encrypted direct messages.",
+        "The encryption key is derived client-side from a wallet signature.",
+        "Size: 8 + 32 + 65 + 8 + 8 + 1 = 122 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "The wallet that owns this inbox"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "encryption_key",
+            "docs": [
+              "ECDH P-256 uncompressed public key (derived from wallet signature)"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                65
+              ]
+            }
+          },
+          {
+            "name": "message_count",
+            "docs": [
+              "How many messages received"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "When the inbox was activated"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
     {
       "name": "Organization",
       "docs": [
@@ -473,6 +888,51 @@
             "name": "timestamp",
             "docs": [
               "When submitted"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Vouch",
+      "docs": [
+        "A vouch for an article. Proves a wallet found content valuable.",
+        "Size: 8 (discriminator) + 32 (voucher) + 32 (content_hash) + 8 (timestamp) + 1 (bump) = 81 bytes"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "voucher",
+            "docs": [
+              "The wallet that vouched"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "content_hash",
+            "docs": [
+              "SHA-256 hash of the article URL"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "When the vouch was made"
             ],
             "type": "i64"
           },
