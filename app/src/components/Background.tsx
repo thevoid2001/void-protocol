@@ -35,18 +35,18 @@ export function FloatingParticles() {
     }
 
     const particles: Particle[] = [];
-    const particleCount = 60;
+    const particleCount = 120;
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: 1 + Math.random() * 2,
-        alpha: 0.2 + Math.random() * 0.4,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: 1.5 + Math.random() * 2.5,
+        alpha: 0.4 + Math.random() * 0.5,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: 0.02 + Math.random() * 0.02,
+        pulseSpeed: 0.02 + Math.random() * 0.03,
       });
     }
 
@@ -74,10 +74,10 @@ export function FloatingParticles() {
         ctx.fillStyle = `rgba(100, 200, 255, ${pulseAlpha})`;
         ctx.fill();
 
-        // Subtle glow
+        // Glow effect
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100, 200, 255, ${pulseAlpha * 0.15})`;
+        ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(100, 200, 255, ${pulseAlpha * 0.25})`;
         ctx.fill();
       });
 
