@@ -13,6 +13,7 @@ import { FeedPage } from "./pages/Feed.tsx";
 import { FeedSourcesPage } from "./pages/FeedSources.tsx";
 import { FeedSavedPage } from "./pages/FeedSaved.tsx";
 import { FeedDiscoverPage } from "./pages/FeedDiscover.tsx";
+import { FeedSocialPage } from "./pages/FeedSocial.tsx";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/burn/send" element={<BurnSendPage />} />
           <Route path="/burn/inbox" element={<BurnInboxPage />} />
           <Route path="/feed" element={<FeedDiscoverPage />} />
+          <Route path="/feed/social" element={<FeedSocialPage />} />
           <Route path="/feed/my" element={<FeedPage />} />
           <Route path="/feed/sources" element={<FeedSourcesPage />} />
           <Route path="/feed/saved" element={<FeedSavedPage />} />

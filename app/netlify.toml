@@ -28,6 +28,11 @@
   to = "/.netlify/functions/vouches"
   status = 200
 
+[[redirects]]
+  from = "/api/posts"
+  to = "/.netlify/functions/posts"
+  status = 200
+
 # SPA fallback - must be last
 [[redirects]]
   from = "/*"
