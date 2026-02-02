@@ -18,24 +18,23 @@ import { FeedSavedPage } from "./pages/FeedSaved.tsx";
 import { FeedDiscoverPage } from "./pages/FeedDiscover.tsx";
 import { SocialPage } from "./pages/Social.tsx";
 
+// Check intro status synchronously to avoid flash
+function shouldShowIntro(): boolean {
+  if (typeof window === "undefined") return false;
+  const hasSeenIntro = sessionStorage.getItem("void-intro-seen");
+  const isHomePage = window.location.pathname === "/";
+  return isHomePage && !hasSeenIntro;
+}
+
 function AppContent() {
   const location = useLocation();
-  const [showIntro, setShowIntro] = useState(false);
-  const [introComplete, setIntroComplete] = useState(true);
-
-  useEffect(() => {
-    // Only show intro on home page and if not seen this session
-    const hasSeenIntro = sessionStorage.getItem("void-intro-seen");
-    if (location.pathname === "/" && !hasSeenIntro) {
-      setShowIntro(true);
-      setIntroComplete(false);
-    }
-  }, []);
+  const [introActive, setIntroActive] = useState(() => shouldShowIntro());
+  const [introComplete, setIntroComplete] = useState(() => !shouldShowIntro());
 
   const handleIntroComplete = () => {
     sessionStorage.setItem("void-intro-seen", "true");
     setIntroComplete(true);
-    setTimeout(() => setShowIntro(false), 500);
+    setTimeout(() => setIntroActive(false), 500);
   };
 
   return (
@@ -45,14 +44,14 @@ function AppContent() {
       <FloatingParticles />
 
       {/* Intro animation */}
-      {showIntro && !introComplete && (
+      {introActive && !introComplete && (
         <IntroAnimation onComplete={handleIntroComplete} />
       )}
 
-      {/* Main content */}
+      {/* Main content - hidden during intro */}
       <div
         className={`relative z-10 transition-opacity duration-500 ${
-          showIntro && !introComplete ? "opacity-0" : "opacity-100"
+          introActive && !introComplete ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >
         <NavBar />

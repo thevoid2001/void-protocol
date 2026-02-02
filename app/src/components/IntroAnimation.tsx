@@ -173,13 +173,10 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
           }
         }
 
-        // Draw character
+        // Draw character - blue color matching logo
         if (c.alpha > 0.01) {
           ctx.font = `${c.size}px monospace`;
-          ctx.fillStyle =
-            globalPhase === "logo"
-              ? `rgba(100, 200, 255, ${c.alpha})`
-              : `rgba(0, 200, 100, ${c.alpha * 0.8})`;
+          ctx.fillStyle = `rgba(100, 200, 255, ${c.alpha * 0.9})`;
           ctx.fillText(c.char, c.x, c.y);
         }
       });
@@ -255,9 +252,9 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
 
       <button
         onClick={onComplete}
-        className="absolute bottom-8 right-8 text-xs text-[#333] hover:text-[#666] transition z-10"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 px-6 py-2 text-sm text-[#505050] hover:text-white border border-[#333] hover:border-[#666] rounded-lg transition z-10"
       >
-        Skip
+        Skip Intro
       </button>
     </div>
   );
