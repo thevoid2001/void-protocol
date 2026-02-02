@@ -159,6 +159,47 @@ export function SocialPage() {
         </p>
       )}
 
+      {/* How it works — cypherpunk explainer */}
+      <div className="mt-20 border-t border-void-border pt-12">
+        <p className="mb-6 font-mono text-xs tracking-widest text-[#888888] uppercase">
+          // How it works
+        </p>
+
+        <div className="space-y-6 text-sm leading-relaxed text-white">
+          <p>
+            <span className="text-cyan-400">Void Social</span> is a decentralized message board
+            where your wallet is your identity. No usernames. No passwords. No email verification.
+            Just cryptographic proof that you are who you say you are.
+          </p>
+
+          <p>
+            Every post is <span className="text-cyan-400">signed with your wallet</span>—a
+            cryptographic signature that proves authorship without revealing anything else about
+            you. Your pseudonymous identity is unforgeable and self-sovereign.
+          </p>
+
+          <p>
+            There is no algorithm deciding what you see. Posts appear in
+            <span className="text-cyan-400"> chronological order</span>. No engagement farming,
+            no outrage amplification, no attention manipulation. The timeline is neutral.
+          </p>
+
+          <p>
+            When you <span className="text-cyan-400">vouch</span> for a post, you stake your
+            reputation on-chain. Real signal from real wallets. No bots. No sock puppets.
+            Just cryptographic attestations of value.
+          </p>
+        </div>
+
+        <p className="mt-8 font-mono text-xs text-[#888888]">
+          "Privacy is necessary for an open society in the electronic age. Privacy is not secrecy...
+          Privacy is the power to selectively reveal oneself to the world."
+        </p>
+        <p className="mt-2 font-mono text-xs text-[#666666]">
+          — Eric Hughes, A Cypherpunk's Manifesto, 1993
+        </p>
+      </div>
+
       {/* Keyboard shortcuts modal */}
       {showShortcuts && (
         <div

@@ -314,6 +314,47 @@ export function FeedDiscoverPage() {
           {articles.length} articles from {searchedFeeds.length} sources
         </p>
       )}
+
+      {/* How it works — cypherpunk explainer */}
+      <div className="mt-20 border-t border-void-border pt-12">
+        <p className="mb-6 font-mono text-xs tracking-widest text-[#888888] uppercase">
+          // How it works
+        </p>
+
+        <div className="space-y-6 text-sm leading-relaxed text-white">
+          <p>
+            <span className="text-cyan-400">Void Feed</span> is an RSS reader that puts you back
+            in control. No algorithms decide what you see. No engagement metrics manipulate
+            your attention. Just chronological content from sources you choose.
+          </p>
+
+          <p>
+            RSS (Really Simple Syndication) is an open standard that lets you
+            <span className="text-cyan-400"> subscribe directly to publishers</span> without
+            intermediaries. Your reading habits stay private—no tracking pixels, no behavioral
+            profiles, no data harvesting.
+          </p>
+
+          <p>
+            When you <span className="text-cyan-400">vouch</span> for an article, you're
+            creating an on-chain attestation that the content has value. These vouches are
+            cryptographic signatures—immutable proof of your judgment, tied to your wallet
+            identity.
+          </p>
+
+          <p>
+            The feed is yours. The attention is yours. The signal is real.
+          </p>
+        </div>
+
+        <p className="mt-8 font-mono text-xs text-[#888888]">
+          "We cannot expect governments, corporations, or other large, faceless organizations
+          to grant us privacy out of their beneficence."
+        </p>
+        <p className="mt-2 font-mono text-xs text-[#666666]">
+          — Eric Hughes, A Cypherpunk's Manifesto, 1993
+        </p>
+      </div>
     </div>
   );
 }
