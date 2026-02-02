@@ -1,5 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { NavBar } from "./components/NavBar.tsx";
+import { Background, FloatingParticles } from "./components/Background.tsx";
+import { IntroAnimation } from "./components/IntroAnimation.tsx";
 import { HomePage } from "./pages/Home.tsx";
 import { StampPage } from "./pages/Stamp.tsx";
 import { DropPage } from "./pages/Drop.tsx";
@@ -15,10 +18,43 @@ import { FeedSavedPage } from "./pages/FeedSaved.tsx";
 import { FeedDiscoverPage } from "./pages/FeedDiscover.tsx";
 import { SocialPage } from "./pages/Social.tsx";
 
-export default function App() {
+function AppContent() {
+  const location = useLocation();
+  const [showIntro, setShowIntro] = useState(false);
+  const [introComplete, setIntroComplete] = useState(true);
+
+  useEffect(() => {
+    // Only show intro on home page and if not seen this session
+    const hasSeenIntro = sessionStorage.getItem("void-intro-seen");
+    if (location.pathname === "/" && !hasSeenIntro) {
+      setShowIntro(true);
+      setIntroComplete(false);
+    }
+  }, []);
+
+  const handleIntroComplete = () => {
+    sessionStorage.setItem("void-intro-seen", "true");
+    setIntroComplete(true);
+    setTimeout(() => setShowIntro(false), 500);
+  };
+
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-void-bg">
+    <div className="min-h-screen">
+      {/* Background layers */}
+      <Background />
+      <FloatingParticles />
+
+      {/* Intro animation */}
+      {showIntro && !introComplete && (
+        <IntroAnimation onComplete={handleIntroComplete} />
+      )}
+
+      {/* Main content */}
+      <div
+        className={`relative z-10 transition-opacity duration-500 ${
+          showIntro && !introComplete ? "opacity-0" : "opacity-100"
+        }`}
+      >
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -37,6 +73,14 @@ export default function App() {
           <Route path="/social" element={<SocialPage />} />
         </Routes>
       </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }

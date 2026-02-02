@@ -3,7 +3,7 @@ import { Logo } from "../components/Logo.tsx";
 
 export function HomePage() {
   return (
-    <div className="flex min-h-[80vh] flex-col items-center justify-center px-6">
+    <div className="flex min-h-[80vh] flex-col items-center justify-center px-6 relative">
       <Logo size={80} />
       <h1 className="mt-6 text-3xl font-semibold">
         <span className="text-white">VOID</span>{" "}
