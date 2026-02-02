@@ -29,18 +29,26 @@ A privacy-first RSS reader with on-chain vouching.
 ### Files Created for Void Feed
 - `app/src/pages/Feed.tsx` - Personal feed
 - `app/src/pages/FeedDiscover.tsx` - Search/discover
+- `app/src/pages/FeedSocial.tsx` - Social feed with posts
 - `app/src/pages/FeedSources.tsx` - Manage sources
 - `app/src/pages/FeedSaved.tsx` - Saved articles
 - `app/src/components/VouchButton.tsx` - Vouch button with counts
 - `app/src/components/TipButton.tsx` - Tip authors (SOL transfer)
+- `app/src/components/ComposePost.tsx` - Post creation with wallet signing
+- `app/src/components/PostCard.tsx` - Post display component
+- `app/src/components/ReadingStats.tsx` - Reading stats display
 - `app/src/utils/feedStorage.ts` - Local storage management
 - `app/src/utils/useFeedData.ts` - React hook for feed data
+- `app/src/utils/useReadingStats.ts` - Reading stats tracking
+- `app/src/utils/useQuoteVouches.ts` - Quote vouch system
+- `app/src/utils/useCuratedLists.ts` - Curated lists management
 - `app/src/data/feedIndex.json` - 224 RSS feeds index (includes 25 Substacks)
 - `app/src/data/tipRegistry.json` - Author wallet mapping for tips
 - `app/netlify/functions/search.ts` - Search feeds
 - `app/netlify/functions/detect.ts` - Auto-detect RSS from URL
 - `app/netlify/functions/fetch.ts` - Proxy RSS fetches
 - `app/netlify/functions/vouches.ts` - Get vouch counts
+- `app/netlify/functions/posts.ts` - Posts API with Netlify Blobs
 
 ## Current State
 
@@ -87,11 +95,17 @@ The follow wallet feature is built in the contract but not deployed yet (need ~0
 
 ### Completed (just now)
 - [x] Tip authors (send SOL) - TipButton component with tip registry
+- [x] Social feed with text posts (`/feed/social`)
+- [x] Wallet-signed posts (text only, 500 char max)
+- [x] Keyboard navigation (j/k/o/?)
+- [x] Reading stats tracking (streak, articles read)
+- [x] Curated lists for source collections
+- [x] Quote vouches (local storage)
 
 ### Planned
 - [ ] Article annotations
-- [ ] Reading stats (local)
-- [ ] Keyboard navigation
+- [ ] Follow wallets (needs contract deploy)
+- [ ] "Vouched by people I follow" filter
 
 ## To Resume
 
