@@ -62,12 +62,17 @@ export function HomePage() {
           </p>
         </Link>
 
-        <div className="rounded-lg border border-void-border/50 p-6 opacity-40">
-          <h2 className="mb-1 text-lg font-medium text-white">Void Switch</h2>
+        <Link
+          to="/social"
+          className="group rounded-lg border border-void-border p-6 transition hover:border-void-accent/30 hover:bg-void-accent/5"
+        >
+          <h2 className="mb-1 text-lg font-medium text-white group-hover:text-void-accent">
+            Void Social
+          </h2>
           <p className="text-sm text-[#888888]">
-            Dead man's switch. Coming soon.
+            Decentralized posts. Wallet-signed. No algorithm.
           </p>
-        </div>
+        </Link>
       </div>
 
       <p className="mt-16 text-xs text-[#888888]/50">
