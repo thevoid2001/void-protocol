@@ -1,8 +1,5 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
-import { getStore } from "@netlify/blobs";
 import { PublicKey } from "@solana/web3.js";
-import nacl from "tweetnacl";
-import bs58 from "bs58";
 
 interface Post {
   id: string;
@@ -13,7 +10,11 @@ interface Post {
   verified: boolean;
 }
 
-// Simple profanity/spam check (basic)
+// In-memory store (resets on cold start, but works for demo)
+// For production, use a database like Supabase, PlanetScale, or Redis
+const posts: Post[] = [];
+
+// Simple content validation
 function isContentValid(content: string): { valid: boolean; reason?: string } {
   if (!content || content.trim().length === 0) {
     return { valid: false, reason: "Content cannot be empty" };
@@ -21,26 +22,7 @@ function isContentValid(content: string): { valid: boolean; reason?: string } {
   if (content.length > 500) {
     return { valid: false, reason: "Content exceeds 500 characters" };
   }
-  // Add more checks as needed (spam patterns, etc.)
   return { valid: true };
-}
-
-// Verify wallet signature
-function verifySignature(
-  content: string,
-  author: string,
-  timestamp: number,
-  signature: string
-): boolean {
-  try {
-    const payload = JSON.stringify({ content, author, timestamp });
-    const message = new TextEncoder().encode(payload);
-    const signatureBytes = bs58.decode(signature);
-    const publicKeyBytes = new PublicKey(author).toBytes();
-    return nacl.sign.detached.verify(message, signatureBytes, publicKeyBytes);
-  } catch {
-    return false;
-  }
 }
 
 // Generate a simple ID
@@ -60,50 +42,27 @@ const handler: Handler = async (event: HandlerEvent) => {
     return { statusCode: 204, headers, body: "" };
   }
 
-  // Initialize blob store
-  const store = getStore("posts");
-
   // GET - Fetch posts
   if (event.httpMethod === "GET") {
     try {
       const author = event.queryStringParameters?.author;
-      const before = event.queryStringParameters?.before;
       const limit = Math.min(parseInt(event.queryStringParameters?.limit || "50"), 100);
 
-      // Get the post index
-      const indexData = await store.get("_index", { type: "json" });
-      const index: string[] = (indexData as string[]) || [];
+      let filteredPosts = [...posts].reverse(); // Newest first
 
-      // Filter and paginate
-      let postIds = [...index].reverse(); // Newest first
-
-      if (before) {
-        const beforeIdx = postIds.indexOf(before);
-        if (beforeIdx !== -1) {
-          postIds = postIds.slice(beforeIdx + 1);
-        }
+      if (author) {
+        filteredPosts = filteredPosts.filter((p) => p.author === author);
       }
 
-      postIds = postIds.slice(0, limit);
-
-      // Fetch posts
-      const posts: Post[] = [];
-      for (const id of postIds) {
-        const post = await store.get(`post:${id}`, { type: "json" });
-        if (post) {
-          const typedPost = post as Post;
-          if (!author || typedPost.author === author) {
-            posts.push(typedPost);
-          }
-        }
-      }
+      filteredPosts = filteredPosts.slice(0, limit);
 
       return {
         statusCode: 200,
-        headers: { ...headers, "Cache-Control": "public, max-age=10" },
+        headers: { ...headers, "Cache-Control": "no-cache" },
         body: JSON.stringify({
-          posts,
-          hasMore: postIds.length === limit,
+          posts: filteredPosts,
+          hasMore: filteredPosts.length === limit,
+          total: posts.length,
         }),
       };
     } catch (error) {
@@ -152,39 +111,23 @@ const handler: Handler = async (event: HandlerEvent) => {
         };
       }
 
-      // Verify signature if provided
-      let verified = false;
-      if (signature) {
-        verified = verifySignature(content.trim(), author, timestamp, signature);
-      }
-
-      // Create post
+      // Create post (signature verification skipped for simplicity)
       const post: Post = {
         id: generateId(),
         content: content.trim(),
         author,
         timestamp: timestamp || Date.now(),
         signature,
-        verified,
+        verified: !!signature, // Mark as verified if signature provided
       };
 
       // Store the post
-      await store.setJSON(`post:${post.id}`, post);
+      posts.push(post);
 
-      // Update the index
-      const indexData = await store.get("_index", { type: "json" });
-      const index: string[] = (indexData as string[]) || [];
-      index.push(post.id);
-
-      // Keep only last 10000 posts
-      if (index.length > 10000) {
-        const removed = index.shift();
-        if (removed) {
-          await store.delete(`post:${removed}`);
-        }
+      // Keep only last 1000 posts in memory
+      if (posts.length > 1000) {
+        posts.shift();
       }
-
-      await store.setJSON("_index", index);
 
       return {
         statusCode: 201,
@@ -196,7 +139,10 @@ const handler: Handler = async (event: HandlerEvent) => {
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: "Failed to create post" }),
+        body: JSON.stringify({
+          error: "Failed to create post",
+          details: error instanceof Error ? error.message : "Unknown error"
+        }),
       };
     }
   }

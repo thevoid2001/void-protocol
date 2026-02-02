@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import bs58 from "bs58";
 
 interface ComposePostProps {
@@ -13,10 +13,10 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const anchorWallet = useAnchorWallet();
+  const { publicKey, signMessage, connected } = useWallet();
 
   const handlePost = useCallback(async () => {
-    if (!anchorWallet || !content.trim()) return;
+    if (!publicKey || !content.trim()) return;
 
     setPosting(true);
     setError(null);
@@ -25,17 +25,20 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
       // Create the post payload
       const payload = {
         content: content.trim(),
-        author: anchorWallet.publicKey.toBase58(),
+        author: publicKey.toBase58(),
         timestamp: Date.now(),
       };
 
       // Sign the payload to prove ownership
-      const message = new TextEncoder().encode(JSON.stringify(payload));
-      const signature = await anchorWallet.signMessage?.(message);
-
-      if (!signature) {
-        // Fallback: some wallets don't support signMessage
-        // We'll still post but mark as unverified
+      let signature: Uint8Array | null = null;
+      if (signMessage) {
+        try {
+          const message = new TextEncoder().encode(JSON.stringify(payload));
+          signature = await signMessage(message);
+        } catch (e) {
+          // Wallet doesn't support signMessage or user rejected
+          console.log("Signing skipped:", e);
+        }
       }
 
       const response = await fetch("/api/posts", {
@@ -60,9 +63,9 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
     } finally {
       setPosting(false);
     }
-  }, [anchorWallet, content, onPostCreated]);
+  }, [publicKey, signMessage, content, onPostCreated]);
 
-  if (!anchorWallet) {
+  if (!connected || !publicKey) {
     return null;
   }
 
@@ -74,12 +77,12 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
       <div className="mb-3 flex items-center gap-2">
         <div className="h-8 w-8 rounded-full bg-void-accent/20 flex items-center justify-center">
           <span className="text-xs font-mono text-void-accent">
-            {anchorWallet.publicKey.toBase58().slice(0, 2)}
+            {publicKey.toBase58().slice(0, 2)}
           </span>
         </div>
         <span className="text-sm font-mono text-[#888888]">
-          {anchorWallet.publicKey.toBase58().slice(0, 4)}...
-          {anchorWallet.publicKey.toBase58().slice(-4)}
+          {publicKey.toBase58().slice(0, 4)}...
+          {publicKey.toBase58().slice(-4)}
         </span>
       </div>
 
