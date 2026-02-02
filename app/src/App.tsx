@@ -50,7 +50,7 @@ function AppContent() {
 
       {/* Main content - hidden during intro */}
       <div
-        className={`relative z-10 transition-opacity duration-500 ${
+        className={`relative z-[2] transition-opacity duration-500 ${
           introActive && !introComplete ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >

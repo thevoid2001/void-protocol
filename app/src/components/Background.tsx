@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 // Simple black background
 export function Background() {
-  return <div className="fixed inset-0 -z-20 bg-black" />;
+  return <div className="fixed inset-0 z-0 bg-black" />;
 }
 
 // Floating blue particles
@@ -95,7 +95,7 @@ export function FloatingParticles() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10 pointer-events-none"
+      className="fixed inset-0 z-[1] pointer-events-none"
     />
   );
 }
