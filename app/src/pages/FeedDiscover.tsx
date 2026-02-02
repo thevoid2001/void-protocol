@@ -148,12 +148,6 @@ export function FeedDiscoverPage() {
         <h1 className="text-2xl font-semibold">Discover</h1>
         <div className="flex items-center gap-3">
           <Link
-            to="/feed/social"
-            className="rounded-lg bg-void-accent/10 border border-void-accent/30 px-4 py-2 text-sm text-void-accent transition hover:bg-void-accent/20"
-          >
-            Social
-          </Link>
-          <Link
             to="/feed/my"
             className="rounded-lg border border-void-border px-4 py-2 text-sm text-[#888888] transition hover:border-[#888888] hover:text-white"
           >
