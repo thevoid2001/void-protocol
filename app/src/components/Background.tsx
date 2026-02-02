@@ -1,61 +1,11 @@
 import { useEffect, useRef } from "react";
 
+// Simple black background
 export function Background() {
-  return (
-    <div className="fixed inset-0 -z-20 overflow-hidden bg-[#050505]">
-      {/* Grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
-      {/* Radial glow */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse at center, rgba(0,209,255,0.08) 0%, rgba(0,209,255,0.02) 40%, transparent 70%)`,
-        }}
-      />
-
-      {/* Noise texture overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.4]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-        }}
-      />
-
-      {/* Vignette */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%)`,
-        }}
-      />
-
-      {/* Scanlines */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            rgba(0,0,0,0.3) 2px,
-            rgba(0,0,0,0.3) 4px
-          )`,
-        }}
-      />
-    </div>
-  );
+  return <div className="fixed inset-0 -z-20 bg-black" />;
 }
 
+// Floating blue particles
 export function FloatingParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -80,19 +30,23 @@ export function FloatingParticles() {
       vy: number;
       size: number;
       alpha: number;
+      pulse: number;
+      pulseSpeed: number;
     }
 
     const particles: Particle[] = [];
-    const particleCount = 40;
+    const particleCount = 60;
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
         size: 1 + Math.random() * 2,
-        alpha: 0.1 + Math.random() * 0.3,
+        alpha: 0.2 + Math.random() * 0.4,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.02 + Math.random() * 0.02,
       });
     }
 
@@ -104,22 +58,26 @@ export function FloatingParticles() {
       particles.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
+        p.pulse += p.pulseSpeed;
 
+        // Wrap around edges
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
+        const pulseAlpha = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+
         // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha})`;
+        ctx.fillStyle = `rgba(100, 200, 255, ${pulseAlpha})`;
         ctx.fill();
 
-        // Glow
+        // Subtle glow
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha * 0.1})`;
+        ctx.fillStyle = `rgba(100, 200, 255, ${pulseAlpha * 0.15})`;
         ctx.fill();
       });
 

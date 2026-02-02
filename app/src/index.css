@@ -14,14 +14,9 @@
 
 html, body, #root {
   min-height: 100vh;
-  background-color: transparent;
+  background-color: #000000;
   color: #ffffff;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* Fallback bg color in case component doesn't load */
-html {
-  background-color: #050505;
 }
 
 /* Solana wallet adapter style overrides */

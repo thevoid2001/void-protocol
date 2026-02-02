@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 
-interface Particle {
+interface CodeChar {
   x: number;
   y: number;
+  char: string;
   targetX: number;
   targetY: number;
   vx: number;
   vy: number;
-  size: number;
   alpha: number;
+  size: number;
+  speed: number;
+  phase: "rain" | "hold" | "converge" | "logo";
 }
+
+// Matrix-style characters
+const CHARS = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF{}[]<>/\\|@#$%&*";
 
 export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [showText, setShowText] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
@@ -28,231 +33,226 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
 
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    const scale = Math.min(canvas.width, canvas.height) / 500;
+    const logoRadius = Math.min(canvas.width, canvas.height) * 0.15;
 
-    // Create face shape points
-    const facePoints: [number, number][] = [];
+    const chars: CodeChar[] = [];
+    const columns = Math.floor(canvas.width / 20);
+    const rows = Math.floor(canvas.height / 20);
 
-    // Face outline (oval)
-    for (let a = 0; a < Math.PI * 2; a += 0.08) {
-      const rx = 70 * scale;
-      const ry = 90 * scale;
-      facePoints.push([Math.cos(a) * rx, Math.sin(a) * ry - 10 * scale]);
+    // Create code characters in a grid that will rain down
+    for (let col = 0; col < columns; col++) {
+      const x = col * 20 + 10;
+      // Stagger start positions above screen
+      for (let row = 0; row < rows + 20; row++) {
+        const startY = -row * 20 - Math.random() * 500;
+        const finalY = row * 20;
+
+        // Calculate if this position should be part of the logo circle
+        const dx = x - centerX;
+        const dy = finalY - centerY;
+        const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+        const isOnRing = distFromCenter > logoRadius - 8 && distFromCenter < logoRadius + 8;
+
+        chars.push({
+          x: x,
+          y: startY,
+          char: CHARS[Math.floor(Math.random() * CHARS.length)],
+          targetX: isOnRing ? x : centerX + (Math.random() - 0.5) * 50,
+          targetY: isOnRing ? finalY : centerY + (Math.random() - 0.5) * 50,
+          vx: 0,
+          vy: 0,
+          alpha: 0.8 + Math.random() * 0.2,
+          size: 14 + Math.random() * 4,
+          speed: 8 + Math.random() * 12,
+          phase: "rain",
+        });
+      }
     }
 
-    // Left eye
-    for (let a = 0; a < Math.PI * 2; a += 0.3) {
-      facePoints.push([
-        -25 * scale + Math.cos(a) * 12 * scale,
-        -20 * scale + Math.sin(a) * 6 * scale
-      ]);
-    }
-    // Left pupil
-    facePoints.push([-25 * scale, -20 * scale]);
+    // Create extra particles specifically for the logo ring
+    const ringParticles = 200;
+    for (let i = 0; i < ringParticles; i++) {
+      const angle = (i / ringParticles) * Math.PI * 2;
+      const ringX = centerX + Math.cos(angle) * logoRadius;
+      const ringY = centerY + Math.sin(angle) * logoRadius;
 
-    // Right eye
-    for (let a = 0; a < Math.PI * 2; a += 0.3) {
-      facePoints.push([
-        25 * scale + Math.cos(a) * 12 * scale,
-        -20 * scale + Math.sin(a) * 6 * scale
-      ]);
-    }
-    // Right pupil
-    facePoints.push([25 * scale, -20 * scale]);
-
-    // Eyebrows
-    for (let x = -38; x < -12; x += 4) {
-      facePoints.push([x * scale, -38 * scale]);
-    }
-    for (let x = 12; x < 38; x += 4) {
-      facePoints.push([x * scale, -38 * scale]);
-    }
-
-    // Nose
-    for (let y = -10; y < 15; y += 5) {
-      facePoints.push([0, y * scale]);
-    }
-    facePoints.push([-8 * scale, 15 * scale]);
-    facePoints.push([8 * scale, 15 * scale]);
-
-    // Mouth
-    for (let a = 0; a < Math.PI; a += 0.2) {
-      facePoints.push([
-        Math.cos(a) * 20 * scale,
-        35 * scale + Math.sin(a) * 8 * scale
-      ]);
-    }
-
-    // Create logo shape points (the void circle with gap)
-    const logoPoints: [number, number][] = [];
-    const logoRadius = 60 * scale;
-
-    // Circle with gap at bottom
-    for (let a = -Math.PI * 0.8; a < Math.PI * 0.8; a += 0.1) {
-      logoPoints.push([
-        Math.cos(a - Math.PI / 2) * logoRadius,
-        Math.sin(a - Math.PI / 2) * logoRadius
-      ]);
-    }
-
-    // Inner details (stylized V shape)
-    for (let i = 0; i < 10; i++) {
-      const t = i / 10;
-      logoPoints.push([
-        (-20 + t * 20) * scale,
-        (-10 + t * 30) * scale
-      ]);
-      logoPoints.push([
-        (20 - t * 20) * scale,
-        (-10 + t * 30) * scale
-      ]);
-    }
-
-    // Create particles - one for each face point
-    const particles: Particle[] = facePoints.map(([fx, fy], i) => {
-      // Map to corresponding logo point (or random if more face points)
-      const logoIdx = i % logoPoints.length;
-      const [lx, ly] = logoPoints[logoIdx];
-
-      return {
-        x: centerX + fx,
-        y: centerY + fy,
-        targetX: centerX + lx,
-        targetY: centerY + ly,
+      chars.push({
+        x: Math.random() * canvas.width,
+        y: -Math.random() * 1000,
+        char: CHARS[Math.floor(Math.random() * CHARS.length)],
+        targetX: ringX,
+        targetY: ringY,
         vx: 0,
         vy: 0,
-        size: 2 + Math.random() * 2,
         alpha: 1,
-      };
-    });
-
-    // Add extra particles for density
-    for (let i = 0; i < 100; i++) {
-      const faceIdx = Math.floor(Math.random() * facePoints.length);
-      const logoIdx = Math.floor(Math.random() * logoPoints.length);
-      const [fx, fy] = facePoints[faceIdx];
-      const [lx, ly] = logoPoints[logoIdx];
-
-      particles.push({
-        x: centerX + fx + (Math.random() - 0.5) * 10,
-        y: centerY + fy + (Math.random() - 0.5) * 10,
-        targetX: centerX + lx + (Math.random() - 0.5) * 5,
-        targetY: centerY + ly + (Math.random() - 0.5) * 5,
-        vx: 0,
-        vy: 0,
-        size: 1 + Math.random() * 1.5,
-        alpha: 0.6 + Math.random() * 0.4,
+        size: 12,
+        speed: 10 + Math.random() * 8,
+        phase: "rain",
       });
     }
 
     let frame = 0;
-    const holdFace = 90; // frames showing face
-    const morphDuration = 120; // frames to morph to logo
-    const holdLogo = 60; // frames showing logo
+    const rainDuration = 80;
+    const holdDuration = 40;
+    const convergeDuration = 100;
+    const logoDuration = 80;
 
     const animate = () => {
-      // Dark background
-      ctx.fillStyle = "#050505";
+      // Black background with slight trail effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       frame++;
 
-      particles.forEach((p) => {
-        if (frame <= holdFace) {
-          // Just show face with subtle movement
-          p.x += (Math.random() - 0.5) * 0.5;
-          p.y += (Math.random() - 0.5) * 0.5;
-        } else if (frame <= holdFace + morphDuration) {
-          // Morph to logo
-          const progress = (frame - holdFace) / morphDuration;
-          const eased = progress < 0.5
-            ? 4 * progress * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-          // First scatter outward, then converge to logo
-          if (progress < 0.3) {
-            // Scatter phase
-            if (p.vx === 0 && p.vy === 0) {
-              const angle = Math.random() * Math.PI * 2;
-              const speed = 2 + Math.random() * 4;
-              p.vx = Math.cos(angle) * speed;
-              p.vy = Math.sin(angle) * speed;
-            }
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vx *= 0.96;
-            p.vy *= 0.96;
-            p.alpha = 0.3 + Math.random() * 0.3;
-          } else {
-            // Converge to logo
-            const convergeProgress = (progress - 0.3) / 0.7;
-            p.x += (p.targetX - p.x) * 0.05;
-            p.y += (p.targetY - p.y) * 0.05;
-            p.alpha = 0.5 + convergeProgress * 0.5;
-          }
-        } else if (frame <= holdFace + morphDuration + holdLogo) {
-          // Hold logo with subtle pulse
-          const pulse = Math.sin(frame * 0.1) * 2;
-          const dx = p.targetX - centerX;
-          const dy = p.targetY - centerY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          p.x = p.targetX + (dx / dist) * pulse;
-          p.y = p.targetY + (dy / dist) * pulse;
-          p.alpha = 1;
-        } else {
-          // Fade out
-          p.alpha *= 0.95;
-        }
-
-        // Draw particle with glow
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha})`;
-        ctx.fill();
-
-        // Glow effect
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha * 0.2})`;
-        ctx.fill();
-      });
-
-      // Show text after logo forms
-      if (frame === holdFace + morphDuration + 20) {
-        setShowText(true);
+      // Determine global phase
+      let globalPhase: "rain" | "hold" | "converge" | "logo";
+      if (frame <= rainDuration) {
+        globalPhase = "rain";
+      } else if (frame <= rainDuration + holdDuration) {
+        globalPhase = "hold";
+      } else if (frame <= rainDuration + holdDuration + convergeDuration) {
+        globalPhase = "converge";
+      } else {
+        globalPhase = "logo";
       }
 
-      // Trigger fade out
-      if (frame >= holdFace + morphDuration + holdLogo) {
+      // Clear for logo phase (no trails)
+      if (globalPhase === "logo") {
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      chars.forEach((c) => {
+        if (globalPhase === "rain") {
+          // Rain down
+          c.y += c.speed;
+          // Random character flicker
+          if (Math.random() < 0.05) {
+            c.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+          }
+        } else if (globalPhase === "hold") {
+          // Hold with subtle flicker
+          if (Math.random() < 0.02) {
+            c.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+          }
+        } else if (globalPhase === "converge") {
+          // Converge to logo
+          const progress = (frame - rainDuration - holdDuration) / convergeDuration;
+
+          // Check if this char should be part of the ring
+          const dx = c.targetX - centerX;
+          const dy = c.targetY - centerY;
+          const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+          const isRingParticle = Math.abs(distFromCenter - logoRadius) < 15;
+
+          if (isRingParticle) {
+            // Move towards ring position
+            c.x += (c.targetX - c.x) * 0.08;
+            c.y += (c.targetY - c.y) * 0.08;
+            c.alpha = 0.5 + progress * 0.5;
+          } else {
+            // Fade out non-ring characters
+            c.alpha *= 0.95;
+            // Drift towards center then fade
+            c.x += (centerX - c.x) * 0.02;
+            c.y += (centerY - c.y) * 0.02;
+          }
+        } else {
+          // Logo phase - only show ring particles
+          const dx = c.targetX - centerX;
+          const dy = c.targetY - centerY;
+          const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+          const isRingParticle = Math.abs(distFromCenter - logoRadius) < 15;
+
+          if (isRingParticle) {
+            c.x = c.targetX;
+            c.y = c.targetY;
+            c.alpha = 1;
+          } else {
+            c.alpha = 0;
+          }
+        }
+
+        // Draw character
+        if (c.alpha > 0.01) {
+          ctx.font = `${c.size}px monospace`;
+          ctx.fillStyle =
+            globalPhase === "logo"
+              ? `rgba(100, 200, 255, ${c.alpha})`
+              : `rgba(0, 200, 100, ${c.alpha * 0.8})`;
+          ctx.fillText(c.char, c.x, c.y);
+        }
+      });
+
+      // Draw the actual logo in logo phase
+      if (globalPhase === "logo") {
+        const logoProgress = (frame - rainDuration - holdDuration - convergeDuration) / logoDuration;
+        const glowAlpha = Math.min(1, logoProgress * 2);
+
+        // Outer glow
+        const gradient = ctx.createRadialGradient(
+          centerX, centerY, logoRadius * 0.8,
+          centerX, centerY, logoRadius * 1.4
+        );
+        gradient.addColorStop(0, "transparent");
+        gradient.addColorStop(0.5, `rgba(100, 200, 255, ${0.1 * glowAlpha})`);
+        gradient.addColorStop(1, "transparent");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Ring
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, logoRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(100, 200, 255, ${0.8 * glowAlpha})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Inner void
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, logoRadius - 3, 0, Math.PI * 2);
+        ctx.fillStyle = "#000000";
+        ctx.fill();
+
+        // Text
+        if (logoProgress > 0.3) {
+          const textAlpha = Math.min(1, (logoProgress - 0.3) * 2);
+          ctx.font = "600 32px system-ui, -apple-system, sans-serif";
+          ctx.fillStyle = `rgba(255, 255, 255, ${textAlpha})`;
+          ctx.textAlign = "center";
+          ctx.fillText("VOID", centerX, centerY + logoRadius + 50);
+
+          ctx.font = "300 12px system-ui, -apple-system, sans-serif";
+          ctx.fillStyle = `rgba(80, 80, 80, ${textAlpha})`;
+          ctx.letterSpacing = "4px";
+          ctx.fillText("PROTOCOL", centerX, centerY + logoRadius + 70);
+        }
+      }
+
+      // End animation
+      if (frame >= rainDuration + holdDuration + convergeDuration + logoDuration) {
         setFadeOut(true);
-        setTimeout(onComplete, 800);
+        setTimeout(onComplete, 600);
         return;
       }
 
       requestAnimationFrame(animate);
     };
 
+    // Start with clear black
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     animate();
   }, [onComplete]);
 
   return (
-    <div className={`fixed inset-0 z-50 transition-opacity duration-700 ${fadeOut ? "opacity-0" : "opacity-100"}`}>
+    <div
+      className={`fixed inset-0 z-50 bg-black transition-opacity duration-500 ${
+        fadeOut ? "opacity-0" : "opacity-100"
+      }`}
+    >
       <canvas ref={canvasRef} className="absolute inset-0" />
 
-      {/* Text overlay */}
-      <div
-        className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 ${
-          showText ? "opacity-100" : "opacity-0"
-        }`}
-        style={{ paddingTop: "180px" }}
-      >
-        <h1 className="text-3xl font-semibold tracking-widest">
-          <span className="text-white">VOID</span>{" "}
-          <span className="text-[#666]">PROTOCOL</span>
-        </h1>
-      </div>
-
-      {/* Skip button */}
       <button
         onClick={onComplete}
         className="absolute bottom-8 right-8 text-xs text-[#333] hover:text-[#666] transition z-10"
