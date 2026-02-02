@@ -1,99 +1,61 @@
 import { useEffect, useRef } from "react";
 
 export function Background() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      draw();
-    };
-
-    const draw = () => {
-      // Base dark background
-      ctx.fillStyle = "#0a0a0a";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Subtle radial gradient from center
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        0,
-        canvas.width / 2,
-        canvas.height / 2,
-        Math.max(canvas.width, canvas.height) * 0.7
-      );
-      gradient.addColorStop(0, "rgba(0, 209, 255, 0.03)");
-      gradient.addColorStop(0.5, "rgba(0, 209, 255, 0.01)");
-      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Grid pattern
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
-      ctx.lineWidth = 1;
-
-      const gridSize = 60;
-
-      // Vertical lines
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-
-      // Horizontal lines
-      for (let y = 0; y < canvas.height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-
-      // Noise/grain overlay
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-
-      for (let i = 0; i < data.length; i += 4) {
-        const noise = (Math.random() - 0.5) * 8;
-        data[i] = Math.max(0, Math.min(255, data[i] + noise));
-        data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
-        data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
-      }
-
-      ctx.putImageData(imageData, 0, 0);
-
-      // Scanline effect (very subtle)
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      for (let y = 0; y < canvas.height; y += 4) {
-        ctx.fillRect(0, y, canvas.width, 1);
-      }
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-
-    return () => window.removeEventListener("resize", resize);
-  }, []);
-
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ opacity: 0.8 }}
-    />
+    <div className="fixed inset-0 -z-20 overflow-hidden bg-[#050505]">
+      {/* Grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      {/* Radial glow */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(ellipse at center, rgba(0,209,255,0.08) 0%, rgba(0,209,255,0.02) 40%, transparent 70%)`,
+        }}
+      />
+
+      {/* Noise texture overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.4]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* Vignette */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%)`,
+        }}
+      />
+
+      {/* Scanlines */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0,0,0,0.3) 2px,
+            rgba(0,0,0,0.3) 4px
+          )`,
+        }}
+      />
+    </div>
   );
 }
 
-// Floating particles that drift slowly (optional enhancement)
 export function FloatingParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -121,16 +83,16 @@ export function FloatingParticles() {
     }
 
     const particles: Particle[] = [];
-    const particleCount = 50;
+    const particleCount = 40;
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: 0.5 + Math.random() * 1.5,
-        alpha: 0.1 + Math.random() * 0.2,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        size: 1 + Math.random() * 2,
+        alpha: 0.1 + Math.random() * 0.3,
       });
     }
 
@@ -143,15 +105,21 @@ export function FloatingParticles() {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Wrap around edges
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
+        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha})`;
+        ctx.fill();
+
+        // Glow
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha * 0.1})`;
         ctx.fill();
       });
 

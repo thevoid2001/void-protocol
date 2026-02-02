@@ -3,18 +3,18 @@ import { useEffect, useRef, useState } from "react";
 interface Particle {
   x: number;
   y: number;
-  originX: number;
-  originY: number;
+  targetX: number;
+  targetY: number;
   vx: number;
   vy: number;
   size: number;
   alpha: number;
-  phase: "form" | "hold" | "scatter" | "fade";
 }
 
 export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [phase, setPhase] = useState<"intro" | "scatter" | "text" | "done">("intro");
+  const [showText, setShowText] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -23,152 +23,209 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas size
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    const particles: Particle[] = [];
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
+    const scale = Math.min(canvas.width, canvas.height) / 500;
 
-    // Create figure shape (stylized human silhouette made of points)
-    const figurePoints: [number, number][] = [];
+    // Create face shape points
+    const facePoints: [number, number][] = [];
 
-    // Head (circle)
-    for (let a = 0; a < Math.PI * 2; a += 0.2) {
-      figurePoints.push([
-        Math.cos(a) * 25,
-        -80 + Math.sin(a) * 25
+    // Face outline (oval)
+    for (let a = 0; a < Math.PI * 2; a += 0.08) {
+      const rx = 70 * scale;
+      const ry = 90 * scale;
+      facePoints.push([Math.cos(a) * rx, Math.sin(a) * ry - 10 * scale]);
+    }
+
+    // Left eye
+    for (let a = 0; a < Math.PI * 2; a += 0.3) {
+      facePoints.push([
+        -25 * scale + Math.cos(a) * 12 * scale,
+        -20 * scale + Math.sin(a) * 6 * scale
+      ]);
+    }
+    // Left pupil
+    facePoints.push([-25 * scale, -20 * scale]);
+
+    // Right eye
+    for (let a = 0; a < Math.PI * 2; a += 0.3) {
+      facePoints.push([
+        25 * scale + Math.cos(a) * 12 * scale,
+        -20 * scale + Math.sin(a) * 6 * scale
+      ]);
+    }
+    // Right pupil
+    facePoints.push([25 * scale, -20 * scale]);
+
+    // Eyebrows
+    for (let x = -38; x < -12; x += 4) {
+      facePoints.push([x * scale, -38 * scale]);
+    }
+    for (let x = 12; x < 38; x += 4) {
+      facePoints.push([x * scale, -38 * scale]);
+    }
+
+    // Nose
+    for (let y = -10; y < 15; y += 5) {
+      facePoints.push([0, y * scale]);
+    }
+    facePoints.push([-8 * scale, 15 * scale]);
+    facePoints.push([8 * scale, 15 * scale]);
+
+    // Mouth
+    for (let a = 0; a < Math.PI; a += 0.2) {
+      facePoints.push([
+        Math.cos(a) * 20 * scale,
+        35 * scale + Math.sin(a) * 8 * scale
       ]);
     }
 
-    // Body (vertical line with width)
-    for (let y = -50; y < 60; y += 8) {
-      const width = y < 0 ? 20 : 25 - (y / 60) * 10;
-      figurePoints.push([-width / 2, y]);
-      figurePoints.push([width / 2, y]);
+    // Create logo shape points (the void circle with gap)
+    const logoPoints: [number, number][] = [];
+    const logoRadius = 60 * scale;
+
+    // Circle with gap at bottom
+    for (let a = -Math.PI * 0.8; a < Math.PI * 0.8; a += 0.1) {
+      logoPoints.push([
+        Math.cos(a - Math.PI / 2) * logoRadius,
+        Math.sin(a - Math.PI / 2) * logoRadius
+      ]);
     }
 
-    // Arms
-    for (let x = -50; x <= 50; x += 8) {
-      figurePoints.push([x, -20 + Math.abs(x) * 0.2]);
+    // Inner details (stylized V shape)
+    for (let i = 0; i < 10; i++) {
+      const t = i / 10;
+      logoPoints.push([
+        (-20 + t * 20) * scale,
+        (-10 + t * 30) * scale
+      ]);
+      logoPoints.push([
+        (20 - t * 20) * scale,
+        (-10 + t * 30) * scale
+      ]);
     }
 
-    // Legs
-    for (let y = 60; y < 100; y += 8) {
-      const spread = (y - 60) * 0.5;
-      figurePoints.push([-10 - spread, y]);
-      figurePoints.push([10 + spread, y]);
-    }
+    // Create particles - one for each face point
+    const particles: Particle[] = facePoints.map(([fx, fy], i) => {
+      // Map to corresponding logo point (or random if more face points)
+      const logoIdx = i % logoPoints.length;
+      const [lx, ly] = logoPoints[logoIdx];
 
-    // Create particles from figure points
-    figurePoints.forEach(([px, py]) => {
-      // Add some randomness around each point
-      for (let i = 0; i < 3; i++) {
-        particles.push({
-          x: centerX + (Math.random() - 0.5) * canvas.width,
-          y: centerY + (Math.random() - 0.5) * canvas.height,
-          originX: centerX + px + (Math.random() - 0.5) * 4,
-          originY: centerY + py + (Math.random() - 0.5) * 4,
-          vx: 0,
-          vy: 0,
-          size: 1.5 + Math.random() * 1.5,
-          alpha: 0,
-          phase: "form",
-        });
-      }
+      return {
+        x: centerX + fx,
+        y: centerY + fy,
+        targetX: centerX + lx,
+        targetY: centerY + ly,
+        vx: 0,
+        vy: 0,
+        size: 2 + Math.random() * 2,
+        alpha: 1,
+      };
     });
 
-    // Add ambient particles
+    // Add extra particles for density
     for (let i = 0; i < 100; i++) {
+      const faceIdx = Math.floor(Math.random() * facePoints.length);
+      const logoIdx = Math.floor(Math.random() * logoPoints.length);
+      const [fx, fy] = facePoints[faceIdx];
+      const [lx, ly] = logoPoints[logoIdx];
+
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        originX: Math.random() * canvas.width,
-        originY: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: 0.5 + Math.random(),
-        alpha: 0.1 + Math.random() * 0.2,
-        phase: "form",
+        x: centerX + fx + (Math.random() - 0.5) * 10,
+        y: centerY + fy + (Math.random() - 0.5) * 10,
+        targetX: centerX + lx + (Math.random() - 0.5) * 5,
+        targetY: centerY + ly + (Math.random() - 0.5) * 5,
+        vx: 0,
+        vy: 0,
+        size: 1 + Math.random() * 1.5,
+        alpha: 0.6 + Math.random() * 0.4,
       });
     }
 
     let frame = 0;
-    const formDuration = 60; // frames to form figure
-    const holdDuration = 30; // frames to hold
-    const scatterDuration = 40; // frames to scatter
-    const fadeDuration = 30; // frames to fade out
+    const holdFace = 90; // frames showing face
+    const morphDuration = 120; // frames to morph to logo
+    const holdLogo = 60; // frames showing logo
 
     const animate = () => {
-      ctx.fillStyle = "#0a0a0a";
+      // Dark background
+      ctx.fillStyle = "#050505";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       frame++;
 
-      particles.forEach((p, i) => {
-        // Skip ambient particles for phase logic
-        const isAmbient = i >= figurePoints.length * 3;
+      particles.forEach((p) => {
+        if (frame <= holdFace) {
+          // Just show face with subtle movement
+          p.x += (Math.random() - 0.5) * 0.5;
+          p.y += (Math.random() - 0.5) * 0.5;
+        } else if (frame <= holdFace + morphDuration) {
+          // Morph to logo
+          const progress = (frame - holdFace) / morphDuration;
+          const eased = progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-        if (!isAmbient) {
-          if (frame <= formDuration) {
-            // Form phase - particles move to figure positions
-            const progress = frame / formDuration;
-            const eased = 1 - Math.pow(1 - progress, 3);
-            p.x += (p.originX - p.x) * 0.08;
-            p.y += (p.originY - p.y) * 0.08;
-            p.alpha = Math.min(1, progress * 2);
-          } else if (frame <= formDuration + holdDuration) {
-            // Hold phase - slight drift
-            p.x = p.originX + Math.sin(frame * 0.05 + i) * 2;
-            p.y = p.originY + Math.cos(frame * 0.05 + i) * 2;
-          } else if (frame <= formDuration + holdDuration + scatterDuration) {
-            // Scatter phase - explode outward
-            if (p.phase !== "scatter") {
-              p.phase = "scatter";
+          // First scatter outward, then converge to logo
+          if (progress < 0.3) {
+            // Scatter phase
+            if (p.vx === 0 && p.vy === 0) {
               const angle = Math.random() * Math.PI * 2;
-              const speed = 3 + Math.random() * 8;
+              const speed = 2 + Math.random() * 4;
               p.vx = Math.cos(angle) * speed;
               p.vy = Math.sin(angle) * speed;
             }
             p.x += p.vx;
             p.y += p.vy;
-            p.vx *= 0.98;
-            p.vy *= 0.98;
-            p.alpha *= 0.96;
+            p.vx *= 0.96;
+            p.vy *= 0.96;
+            p.alpha = 0.3 + Math.random() * 0.3;
           } else {
-            // Fade phase
-            p.alpha *= 0.9;
+            // Converge to logo
+            const convergeProgress = (progress - 0.3) / 0.7;
+            p.x += (p.targetX - p.x) * 0.05;
+            p.y += (p.targetY - p.y) * 0.05;
+            p.alpha = 0.5 + convergeProgress * 0.5;
           }
+        } else if (frame <= holdFace + morphDuration + holdLogo) {
+          // Hold logo with subtle pulse
+          const pulse = Math.sin(frame * 0.1) * 2;
+          const dx = p.targetX - centerX;
+          const dy = p.targetY - centerY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          p.x = p.targetX + (dx / dist) * pulse;
+          p.y = p.targetY + (dy / dist) * pulse;
+          p.alpha = 1;
         } else {
-          // Ambient particles float
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+          // Fade out
+          p.alpha *= 0.95;
         }
 
-        // Draw particle
+        // Draw particle with glow
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha})`;
         ctx.fill();
+
+        // Glow effect
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 209, 255, ${p.alpha * 0.2})`;
+        ctx.fill();
       });
 
-      // Update phase state for text display
-      if (frame === formDuration + holdDuration) {
-        setPhase("scatter");
+      // Show text after logo forms
+      if (frame === holdFace + morphDuration + 20) {
+        setShowText(true);
       }
-      if (frame === formDuration + holdDuration + scatterDuration) {
-        setPhase("text");
-      }
-      if (frame >= formDuration + holdDuration + scatterDuration + fadeDuration) {
-        setPhase("done");
-        setTimeout(onComplete, 500);
+
+      // Trigger fade out
+      if (frame >= holdFace + morphDuration + holdLogo) {
+        setFadeOut(true);
+        setTimeout(onComplete, 800);
         return;
       }
 
@@ -176,35 +233,29 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
     };
 
     animate();
-
-    return () => {
-      window.removeEventListener("resize", resize);
-    };
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#0a0a0a]">
+    <div className={`fixed inset-0 z-50 transition-opacity duration-700 ${fadeOut ? "opacity-0" : "opacity-100"}`}>
       <canvas ref={canvasRef} className="absolute inset-0" />
 
-      {/* Text that fades in after scatter */}
+      {/* Text overlay */}
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-700 ${
-          phase === "text" || phase === "done" ? "opacity-100" : "opacity-0"
+        className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 ${
+          showText ? "opacity-100" : "opacity-0"
         }`}
+        style={{ paddingTop: "180px" }}
       >
-        <h1 className="text-4xl font-semibold tracking-wider">
+        <h1 className="text-3xl font-semibold tracking-widest">
           <span className="text-white">VOID</span>{" "}
-          <span className="text-[#888888]">PROTOCOL</span>
+          <span className="text-[#666]">PROTOCOL</span>
         </h1>
-        <p className="mt-3 text-sm text-[#888888]">
-          Privacy tools for the sovereign individual
-        </p>
       </div>
 
       {/* Skip button */}
       <button
         onClick={onComplete}
-        className="absolute bottom-8 right-8 text-xs text-[#505050] hover:text-[#888888] transition"
+        className="absolute bottom-8 right-8 text-xs text-[#333] hover:text-[#666] transition z-10"
       >
         Skip
       </button>
