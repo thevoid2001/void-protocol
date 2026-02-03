@@ -254,49 +254,54 @@ export async function deriveEncryptionKeyPair(
   const dBytes = new Uint8Array(derivedBits);
   const dBase64 = base64UrlEncode(dBytes);
 
-  // We need to compute the public key point from the private scalar
-  // P-256 requires deriving G * d, but WebCrypto doesn't expose scalar multiplication
-  // Instead, we import as JWK and re-export to get the computed public key
+  // Build a minimal JWK with only kty, crv, d — the browser computes x,y from d
+  const jwk: JsonWebKey = {
+    kty: "EC",
+    crv: "P-256",
+    d: dBase64,
+    key_ops: ["deriveKey"],
+    ext: true,
+  };
 
-  // First, generate a dummy keypair to get the right structure
-  const tempKeyPair = await crypto.subtle.generateKey(
-    { name: "ECDH", namedCurve: "P-256" },
-    true,
-    ["deriveKey"],
-  );
-  const tempJwk = await crypto.subtle.exportKey("jwk", tempKeyPair.privateKey);
-
-  // Replace 'd' with our derived value
-  tempJwk.d = dBase64;
-
-  // Import with our derived 'd' - WebCrypto will compute x,y from it
-  // Note: This may fail if the derived scalar is invalid (very rare edge case)
   let privateKey: CryptoKey;
   try {
     privateKey = await crypto.subtle.importKey(
       "jwk",
-      tempJwk,
+      jwk,
       { name: "ECDH", namedCurve: "P-256" },
       true,
       ["deriveKey"],
     );
   } catch {
-    // If the scalar is invalid, hash it again to get a valid one
+    // If the scalar is invalid (>= curve order), hash it again
     const retryEntropy = await crypto.subtle.digest("SHA-256", derivedBits);
     const retryDBytes = new Uint8Array(retryEntropy);
-    tempJwk.d = base64UrlEncode(retryDBytes);
+    jwk.d = base64UrlEncode(retryDBytes);
     privateKey = await crypto.subtle.importKey(
       "jwk",
-      tempJwk,
+      jwk,
       { name: "ECDH", namedCurve: "P-256" },
       true,
       ["deriveKey"],
     );
   }
 
-  // Export the final keypair
+  // Export the complete private key JWK (now includes computed x,y)
   const privateKeyJwk = await crypto.subtle.exportKey("jwk", privateKey);
-  const publicKeyRaw = await crypto.subtle.exportKey("raw", privateKey);
+
+  // Export the public key by re-importing as public then exporting raw
+  const publicKeyJwk = { ...privateKeyJwk };
+  delete publicKeyJwk.d;
+  delete publicKeyJwk.key_ops;
+  publicKeyJwk.key_ops = [];
+  const publicKey = await crypto.subtle.importKey(
+    "jwk",
+    publicKeyJwk,
+    { name: "ECDH", namedCurve: "P-256" },
+    true,
+    [],
+  );
+  const publicKeyRaw = await crypto.subtle.exportKey("raw", publicKey);
 
   return {
     publicKey: new Uint8Array(publicKeyRaw),
