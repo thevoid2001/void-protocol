@@ -43,3 +43,21 @@ export interface ProofData {
   timestamp: { toNumber: () => number };
   bump: number;
 }
+
+/** Derive PDA for a wallet profile */
+export function getProfilePDA(wallet: PublicKey): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from("profile"), wallet.toBuffer()],
+    PROGRAM_ID,
+  );
+  return pda;
+}
+
+/** Derive PDA for a follow relationship */
+export function getFollowPDA(follower: PublicKey, following: PublicKey): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from("follow"), follower.toBuffer(), following.toBuffer()],
+    PROGRAM_ID,
+  );
+  return pda;
+}

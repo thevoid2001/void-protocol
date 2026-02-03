@@ -16,6 +16,7 @@ interface OrgInfo {
   name: string;
   submissionCount: number;
   address: PublicKey;
+  active: boolean;
 }
 
 interface SubmissionInfo {
@@ -33,6 +34,7 @@ export function DropDashboardPage() {
   const [privateKey, setPrivateKey] = useState<JsonWebKey | null>(null);
   const [keyInput, setKeyInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deactivating, setDeactivating] = useState(false);
   const [decrypting, setDecrypting] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,6 +68,7 @@ export function DropDashboardPage() {
                 name: org.name,
                 submissionCount: (org.submissionCount as { toNumber: () => number }).toNumber(),
                 address: account.pubkey,
+                active: org.active as boolean,
               });
             }
           } catch {
@@ -121,6 +124,39 @@ export function DropDashboardPage() {
       console.error("Failed to fetch submissions:", err);
     }
   }, [wallet]);
+
+  // Deactivate an organization
+  const handleDeactivate = async (org: OrgInfo) => {
+    if (!wallet) return;
+    if (!confirm(`Deactivate "${org.name}"? This will prevent new submissions.`)) return;
+
+    setDeactivating(true);
+    try {
+      const program = getProgram(wallet);
+      await program.methods
+        .deactivateOrganization()
+        .accounts({
+          organization: org.address,
+          admin: wallet.publicKey,
+        })
+        .rpc();
+
+      // Update local state
+      setOrgs((prev) =>
+        prev.map((o) =>
+          o.slug === org.slug ? { ...o, active: false } : o
+        )
+      );
+      if (selectedOrg?.slug === org.slug) {
+        setSelectedOrg({ ...selectedOrg, active: false });
+      }
+    } catch (err) {
+      console.error("Failed to deactivate:", err);
+      setError("Failed to deactivate organization.");
+    } finally {
+      setDeactivating(false);
+    }
+  };
 
   const handleLoadKey = () => {
     try {
@@ -234,16 +270,34 @@ export function DropDashboardPage() {
         ) : (
           <div className="space-y-3">
             {orgs.map((org) => (
-              <button
+              <div
                 key={org.slug}
-                onClick={() => fetchSubmissions(org)}
-                className="w-full rounded-lg border border-void-border p-5 text-left transition hover:border-void-accent/30 hover:bg-void-accent/5"
+                className="rounded-lg border border-void-border p-5 transition hover:border-void-accent/30 hover:bg-void-accent/5"
               >
-                <h2 className="text-lg font-medium text-white">{org.name}</h2>
-                <p className="mt-1 text-sm text-[#888888]">
-                  {org.submissionCount} submission{org.submissionCount !== 1 ? "s" : ""}
-                </p>
-              </button>
+                <div className="flex items-start justify-between">
+                  <button
+                    onClick={() => fetchSubmissions(org)}
+                    className="text-left flex-1"
+                  >
+                    <h2 className="text-lg font-medium text-white">{org.name}</h2>
+                    <p className="mt-1 text-sm text-[#888888]">
+                      {org.submissionCount} submission{org.submissionCount !== 1 ? "s" : ""}
+                      {!org.active && (
+                        <span className="ml-2 text-void-error">· Deactivated</span>
+                      )}
+                    </p>
+                  </button>
+                  {org.active && (
+                    <button
+                      onClick={() => handleDeactivate(org)}
+                      disabled={deactivating}
+                      className="rounded border border-void-error/30 px-3 py-1 text-xs text-void-error transition hover:bg-void-error/10 disabled:opacity-50"
+                    >
+                      {deactivating ? "..." : "Deactivate"}
+                    </button>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         )}

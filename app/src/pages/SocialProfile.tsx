@@ -5,15 +5,19 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PostCard, PostCardSkeleton, Post, truncateAddress, getWalletColor } from "../components/PostCard.tsx";
 import { ComposePost } from "../components/ComposePost.tsx";
 import { useFollowing } from "../hooks/useFollowing.ts";
+import { useProfile } from "../hooks/useProfile.ts";
 
 export function SocialProfilePage() {
   const { address } = useParams<{ address: string }>();
   const { publicKey, connected } = useWallet();
-  const { isFollowing, toggleFollow } = useFollowing();
+  const { isFollowing, toggleFollow, loading: followLoading } = useFollowing();
+  const { profile, loading: profileLoading, createProfile, updateProfile, creating, updating, hasProfile } = useProfile(address);
+  const { profile: myProfile, createProfile: createMyProfile, hasProfile: iHaveProfile } = useProfile();
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [replyingTo, setReplyingTo] = useState<Post | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   const isOwnProfile = publicKey?.toBase58() === address;
 
@@ -85,34 +89,143 @@ export function SocialProfilePage() {
               {isOwnProfile && (
                 <p className="mt-2 text-xs text-void-accent">This is you</p>
               )}
+              {hasProfile && (
+                <p className="mt-1 text-xs text-[#505050]">
+                  On-chain profile active
+                </p>
+              )}
             </div>
           </div>
 
           <div className="flex items-center gap-2">
+            {isOwnProfile && connected && (
+              <>
+                {!hasProfile ? (
+                  <button
+                    onClick={createProfile}
+                    disabled={creating}
+                    className="rounded-lg bg-void-accent px-4 py-2 text-sm font-medium text-black transition hover:bg-void-accent/90 disabled:opacity-50"
+                  >
+                    {creating ? "Creating..." : "Create Profile"}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowSettings(!showSettings)}
+                    className="rounded-lg border border-void-border px-3 py-2 text-sm text-[#888888] transition hover:border-[#888888] hover:text-white"
+                  >
+                    Settings
+                  </button>
+                )}
+              </>
+            )}
             {!isOwnProfile && connected && (
               <button
                 onClick={() => toggleFollow(address)}
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                disabled={followLoading}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition disabled:opacity-50 ${
                   following
                     ? "border border-void-accent text-void-accent hover:bg-void-accent/10"
                     : "bg-void-accent text-black hover:bg-void-accent/90"
                 }`}
               >
-                {following ? "Following" : "Follow"}
+                {followLoading ? "..." : following ? "Following" : "Follow"}
               </button>
             )}
             {!connected && <WalletMultiButton />}
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="mt-6 flex items-center gap-6 border-t border-void-border pt-4">
-          <div>
-            <span className="text-lg font-semibold text-white">{posts.length}</span>
-            <span className="ml-1 text-sm text-[#888888]">posts</span>
+        {/* On-chain stats */}
+        {profile && (
+          <div className="mt-6 flex items-center gap-6 border-t border-void-border pt-4">
+            <div>
+              <span className="text-lg font-semibold text-white">{posts.length}</span>
+              <span className="ml-1 text-sm text-[#888888]">posts</span>
+            </div>
+            {profile.followerCount > 0 && (
+              <div>
+                <span className="text-lg font-semibold text-white">{profile.followerCount}</span>
+                <span className="ml-1 text-sm text-[#888888]">followers</span>
+              </div>
+            )}
+            {profile.followingCount > 0 && (
+              <div>
+                <span className="text-lg font-semibold text-white">{profile.followingCount}</span>
+                <span className="ml-1 text-sm text-[#888888]">following</span>
+              </div>
+            )}
+            {profile.totalVouches > 0 && (
+              <div>
+                <span className="text-lg font-semibold text-white">{profile.totalVouches}</span>
+                <span className="ml-1 text-sm text-[#888888]">vouches</span>
+              </div>
+            )}
           </div>
-        </div>
+        )}
+
+        {/* Stats without profile */}
+        {!profile && (
+          <div className="mt-6 flex items-center gap-6 border-t border-void-border pt-4">
+            <div>
+              <span className="text-lg font-semibold text-white">{posts.length}</span>
+              <span className="ml-1 text-sm text-[#888888]">posts</span>
+            </div>
+          </div>
+        )}
+
+        {/* Profile settings panel */}
+        {showSettings && isOwnProfile && hasProfile && profile && (
+          <div className="mt-6 border-t border-void-border pt-4">
+            <p className="mb-4 text-xs text-[#888888] uppercase tracking-wider">
+              Profile Settings
+            </p>
+            <div className="space-y-3">
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-white">Show reputation publicly</span>
+                <button
+                  onClick={() => updateProfile(!profile.reputationVisible, profile.allowFollowers)}
+                  disabled={updating}
+                  className={`rounded-full px-3 py-1 text-xs transition ${
+                    profile.reputationVisible
+                      ? "bg-void-accent text-black"
+                      : "bg-void-surface text-[#888888]"
+                  }`}
+                >
+                  {profile.reputationVisible ? "On" : "Off"}
+                </button>
+              </label>
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-white">Allow followers</span>
+                <button
+                  onClick={() => updateProfile(profile.reputationVisible, !profile.allowFollowers)}
+                  disabled={updating}
+                  className={`rounded-full px-3 py-1 text-xs transition ${
+                    profile.allowFollowers
+                      ? "bg-void-accent text-black"
+                      : "bg-void-surface text-[#888888]"
+                  }`}
+                >
+                  {profile.allowFollowers ? "On" : "Off"}
+                </button>
+              </label>
+            </div>
+            {updating && (
+              <p className="mt-3 text-xs text-void-accent animate-pulse">
+                Updating on-chain...
+              </p>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Create profile prompt for own profile */}
+      {isOwnProfile && connected && !hasProfile && !profileLoading && (
+        <div className="mb-6 rounded-lg border border-void-accent/30 bg-void-accent/5 p-4">
+          <p className="text-sm text-void-accent">
+            Create your on-chain profile to enable followers and track your reputation.
+          </p>
+        </div>
+      )}
 
       {/* Reply composer (when replying) */}
       {replyingTo && (
