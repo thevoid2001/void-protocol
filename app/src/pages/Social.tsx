@@ -1,8 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { ComposePost } from "../components/ComposePost.tsx";
-import { PostCard, PostCardSkeleton, Post } from "../components/PostCard.tsx";
+import { PostCard, PostCardSkeleton, Post, truncateAddress, getWalletColor } from "../components/PostCard.tsx";
+import { useFollowing } from "../hooks/useFollowing.ts";
+
+type TimelineTab = "all" | "following";
 
 // Keyboard shortcuts
 const SHORTCUTS = {
@@ -13,19 +17,29 @@ const SHORTCUTS = {
 };
 
 export function SocialPage() {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
+  const { following, followingCount } = useFollowing();
+
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [activeTab, setActiveTab] = useState<TimelineTab>("all");
+  const [replyingTo, setReplyingTo] = useState<Post | null>(null);
 
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
 
-  // Fetch posts
+  // Fetch posts based on active tab
   const fetchPosts = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/posts");
+      let url = "/api/posts";
+
+      if (activeTab === "following" && following.length > 0) {
+        url = `/api/posts?authors=${following.join(",")}`;
+      }
+
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
         setPosts(data.posts || []);
@@ -35,7 +49,7 @@ export function SocialPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [activeTab, following]);
 
   useEffect(() => {
     fetchPosts();
@@ -67,6 +81,7 @@ export function SocialPage() {
         case "Escape":
           setShowShortcuts(false);
           setSelectedIndex(-1);
+          setReplyingTo(null);
           break;
       }
     };
@@ -97,6 +112,25 @@ export function SocialPage() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            {connected && publicKey && (
+              <Link
+                to={`/social/${publicKey.toBase58()}`}
+                className="flex items-center gap-2 rounded-lg border border-void-border px-3 py-2 text-sm text-[#888888] transition hover:border-[#888888] hover:text-white"
+              >
+                <div
+                  className="h-5 w-5 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: `${getWalletColor(publicKey.toBase58())}20` }}
+                >
+                  <span
+                    className="text-[10px] font-mono"
+                    style={{ color: getWalletColor(publicKey.toBase58()) }}
+                  >
+                    {publicKey.toBase58().slice(0, 2)}
+                  </span>
+                </div>
+                <span>My Profile</span>
+              </Link>
+            )}
             <button
               onClick={() => setShowShortcuts(true)}
               className="rounded-lg border border-void-border px-3 py-2 text-sm text-[#505050] transition hover:border-[#888888] hover:text-white"
@@ -109,6 +143,35 @@ export function SocialPage() {
         </div>
       </div>
 
+      {/* Timeline tabs */}
+      <div className="mb-6 flex items-center gap-1 border-b border-void-border">
+        <button
+          onClick={() => setActiveTab("all")}
+          className={`px-4 py-3 text-sm font-medium transition border-b-2 -mb-[1px] ${
+            activeTab === "all"
+              ? "border-void-accent text-white"
+              : "border-transparent text-[#888888] hover:text-white"
+          }`}
+        >
+          For You
+        </button>
+        <button
+          onClick={() => setActiveTab("following")}
+          className={`px-4 py-3 text-sm font-medium transition border-b-2 -mb-[1px] flex items-center gap-2 ${
+            activeTab === "following"
+              ? "border-void-accent text-white"
+              : "border-transparent text-[#888888] hover:text-white"
+          }`}
+        >
+          Following
+          {followingCount > 0 && (
+            <span className="rounded-full bg-void-surface px-2 py-0.5 text-xs">
+              {followingCount}
+            </span>
+          )}
+        </button>
+      </div>
+
       {/* Connect prompt for non-connected users */}
       {!connected && (
         <div className="mb-6 rounded-lg border border-void-accent/30 bg-void-accent/5 p-4">
@@ -118,8 +181,39 @@ export function SocialPage() {
         </div>
       )}
 
-      {/* Compose */}
-      {connected && (
+      {/* Following empty state */}
+      {activeTab === "following" && followingCount === 0 && !loading && (
+        <div className="mb-6 rounded-lg border border-void-border p-6 text-center">
+          <div className="mb-3 text-3xl">👥</div>
+          <p className="text-[#888888]">You're not following anyone yet</p>
+          <p className="mt-1 text-xs text-[#505050]">
+            Visit profiles and follow wallets to see their posts here.
+          </p>
+          <button
+            onClick={() => setActiveTab("all")}
+            className="mt-4 text-sm text-void-accent hover:underline"
+          >
+            Browse all posts →
+          </button>
+        </div>
+      )}
+
+      {/* Reply composer */}
+      {replyingTo && (
+        <div className="mb-6">
+          <ComposePost
+            replyTo={replyingTo}
+            onCancelReply={() => setReplyingTo(null)}
+            onPostCreated={() => {
+              setReplyingTo(null);
+              fetchPosts();
+            }}
+          />
+        </div>
+      )}
+
+      {/* Compose (only show when not replying) */}
+      {connected && !replyingTo && (
         <div className="mb-8">
           <ComposePost onPostCreated={fetchPosts} />
         </div>
@@ -136,17 +230,25 @@ export function SocialPage() {
         ) : posts.length === 0 ? (
           <div className="rounded-lg border border-void-border p-12 text-center">
             <div className="mb-4 text-5xl">✍️</div>
-            <h2 className="mb-2 text-lg font-medium text-white">No posts yet</h2>
+            <h2 className="mb-2 text-lg font-medium text-white">
+              {activeTab === "following" ? "No posts from people you follow" : "No posts yet"}
+            </h2>
             <p className="text-sm text-[#888888]">
               {connected
-                ? "Be the first to post something."
+                ? activeTab === "following"
+                  ? "Follow more wallets to see their posts here."
+                  : "Be the first to post something."
                 : "Connect your wallet to start the conversation."}
             </p>
           </div>
         ) : (
           posts.map((post, index) => (
             <div key={post.id} ref={(el) => (itemRefs.current[index] = el)}>
-              <PostCard post={post} isSelected={selectedIndex === index} />
+              <PostCard
+                post={post}
+                isSelected={selectedIndex === index}
+                onReply={connected ? setReplyingTo : undefined}
+              />
             </div>
           ))
         )}
@@ -156,7 +258,39 @@ export function SocialPage() {
       {!loading && posts.length > 0 && (
         <p className="mt-8 text-center text-xs text-[#505050]">
           {posts.length} post{posts.length !== 1 ? "s" : ""}
+          {activeTab === "following" && ` from ${followingCount} wallet${followingCount !== 1 ? "s" : ""}`}
         </p>
+      )}
+
+      {/* Following list (quick access) */}
+      {activeTab === "following" && followingCount > 0 && !loading && (
+        <div className="mt-8 border-t border-void-border pt-6">
+          <p className="mb-3 text-xs text-[#505050] uppercase tracking-wider">
+            Following ({followingCount})
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {following.slice(0, 10).map((address) => (
+              <Link
+                key={address}
+                to={`/social/${address}`}
+                className="flex items-center gap-2 rounded-full border border-void-border px-3 py-1.5 text-xs transition hover:border-[#888888]"
+              >
+                <div
+                  className="h-4 w-4 rounded-full"
+                  style={{ backgroundColor: `${getWalletColor(address)}40` }}
+                />
+                <span className="font-mono text-[#888888]">
+                  {truncateAddress(address)}
+                </span>
+              </Link>
+            ))}
+            {followingCount > 10 && (
+              <span className="px-3 py-1.5 text-xs text-[#505050]">
+                +{followingCount - 10} more
+              </span>
+            )}
+          </div>
+        </div>
       )}
 
       {/* How it works — cypherpunk explainer */}

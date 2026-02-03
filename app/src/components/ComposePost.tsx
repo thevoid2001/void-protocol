@@ -1,19 +1,36 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import bs58 from "bs58";
+import { Post, truncateAddress, getWalletColor } from "./PostCard.tsx";
 
 interface ComposePostProps {
   onPostCreated?: () => void;
+  replyTo?: Post | null;
+  onCancelReply?: () => void;
+  autoFocus?: boolean;
 }
 
 const MAX_LENGTH = 500;
 
-export function ComposePost({ onPostCreated }: ComposePostProps) {
+export function ComposePost({
+  onPostCreated,
+  replyTo,
+  onCancelReply,
+  autoFocus = false,
+}: ComposePostProps) {
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { publicKey, signMessage, connected } = useWallet();
+
+  // Focus textarea when replying
+  useEffect(() => {
+    if ((replyTo || autoFocus) && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [replyTo, autoFocus]);
 
   const handlePost = useCallback(async () => {
     if (!publicKey || !content.trim()) return;
@@ -27,6 +44,7 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
         content: content.trim(),
         author: publicKey.toBase58(),
         timestamp: Date.now(),
+        replyTo: replyTo?.id || null,
       };
 
       // Sign the payload to prove ownership
@@ -56,6 +74,7 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
       }
 
       setContent("");
+      onCancelReply?.();
       onPostCreated?.();
     } catch (e) {
       console.error("Post failed:", e);
@@ -63,7 +82,22 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
     } finally {
       setPosting(false);
     }
-  }, [publicKey, signMessage, content, onPostCreated]);
+  }, [publicKey, signMessage, content, replyTo, onPostCreated, onCancelReply]);
+
+  // Handle keyboard shortcuts
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Cmd/Ctrl + Enter to post
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      if (content.trim() && !posting && !isOverLimit) {
+        handlePost();
+      }
+    }
+    // Escape to cancel reply
+    if (e.key === "Escape" && replyTo) {
+      onCancelReply?.();
+    }
+  };
 
   if (!connected || !publicKey) {
     return null;
@@ -74,6 +108,27 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
 
   return (
     <div className="rounded-lg border border-void-border bg-void-surface p-4">
+      {/* Reply context */}
+      {replyTo && (
+        <div className="mb-3 flex items-center justify-between rounded-lg bg-void-bg/50 px-3 py-2">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-[#505050]">Replying to</span>
+            <span
+              className="font-mono"
+              style={{ color: getWalletColor(replyTo.author) }}
+            >
+              {truncateAddress(replyTo.author)}
+            </span>
+          </div>
+          <button
+            onClick={onCancelReply}
+            className="text-[#505050] hover:text-white text-xs"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <div className="mb-3 flex items-center gap-2">
         <div className="h-8 w-8 rounded-full bg-void-accent/20 flex items-center justify-center">
           <span className="text-xs font-mono text-void-accent">
@@ -87,9 +142,11 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
       </div>
 
       <textarea
+        ref={textareaRef}
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="What's on your mind?"
+        onKeyDown={handleKeyDown}
+        placeholder={replyTo ? "Write a reply..." : "What's on your mind?"}
         className="w-full resize-none rounded-lg border-none bg-transparent text-white placeholder-[#505050] outline-none"
         rows={3}
         maxLength={MAX_LENGTH + 50} // Allow typing over to show error
@@ -112,17 +169,27 @@ export function ComposePost({ onPostCreated }: ComposePostProps) {
           {remaining}
         </span>
 
-        <button
-          onClick={handlePost}
-          disabled={posting || !content.trim() || isOverLimit}
-          className="rounded-lg bg-void-accent px-4 py-2 text-sm font-medium text-black transition hover:bg-void-accent/90 disabled:opacity-50"
-        >
-          {posting ? "Posting..." : "Post"}
-        </button>
+        <div className="flex items-center gap-2">
+          {replyTo && (
+            <button
+              onClick={onCancelReply}
+              className="rounded-lg border border-void-border px-4 py-2 text-sm text-[#888888] transition hover:border-[#888888] hover:text-white"
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            onClick={handlePost}
+            disabled={posting || !content.trim() || isOverLimit}
+            className="rounded-lg bg-void-accent px-4 py-2 text-sm font-medium text-black transition hover:bg-void-accent/90 disabled:opacity-50"
+          >
+            {posting ? "Posting..." : replyTo ? "Reply" : "Post"}
+          </button>
+        </div>
       </div>
 
       <p className="mt-3 text-xs text-[#505050]">
-        Posts are signed with your wallet. Text only, no images.
+        {replyTo ? "Press ⌘+Enter to reply, Esc to cancel" : "Posts are signed with your wallet. ⌘+Enter to post."}
       </p>
     </div>
   );

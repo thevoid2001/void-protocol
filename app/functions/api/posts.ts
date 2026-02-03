@@ -7,6 +7,7 @@ interface Post {
   timestamp: number;
   signature: string | null;
   verified: boolean;
+  replyTo?: string | null; // ID of parent post
 }
 
 // In-memory store (resets on cold start - for demo purposes)
@@ -50,19 +51,58 @@ export const onRequest: PagesFunction = async (context) => {
   if (request.method === "GET") {
     const url = new URL(request.url);
     const author = url.searchParams.get("author");
+    const authors = url.searchParams.get("authors"); // Comma-separated list for following
+    const replyTo = url.searchParams.get("replyTo"); // Get replies to a specific post
+    const postId = url.searchParams.get("id"); // Get single post by ID
     const limit = Math.min(parseInt(url.searchParams.get("limit") || "50"), 100);
+
+    // Get single post by ID
+    if (postId) {
+      const post = posts.find((p) => p.id === postId);
+      if (!post) {
+        return new Response(
+          JSON.stringify({ error: "Post not found" }),
+          { status: 404, headers }
+        );
+      }
+      return new Response(JSON.stringify({ post }), { headers });
+    }
 
     let filteredPosts = [...posts].reverse();
 
+    // Filter by single author
     if (author) {
       filteredPosts = filteredPosts.filter((p) => p.author === author);
     }
 
+    // Filter by multiple authors (for following feed)
+    if (authors) {
+      const authorList = authors.split(",").filter(Boolean);
+      filteredPosts = filteredPosts.filter((p) => authorList.includes(p.author));
+    }
+
+    // Filter by replyTo (get thread replies)
+    if (replyTo) {
+      filteredPosts = filteredPosts.filter((p) => p.replyTo === replyTo);
+    } else {
+      // By default, only show top-level posts (not replies) unless specifically requesting replies
+      // But if viewing a profile, show all their posts including replies
+      if (!author && !authors) {
+        filteredPosts = filteredPosts.filter((p) => !p.replyTo);
+      }
+    }
+
     filteredPosts = filteredPosts.slice(0, limit);
+
+    // Calculate reply counts for each post
+    const postsWithReplyCounts = filteredPosts.map((post) => ({
+      ...post,
+      replyCount: posts.filter((p) => p.replyTo === post.id).length,
+    }));
 
     return new Response(
       JSON.stringify({
-        posts: filteredPosts,
+        posts: postsWithReplyCounts,
         hasMore: filteredPosts.length === limit,
         total: posts.length,
       }),
@@ -78,8 +118,9 @@ export const onRequest: PagesFunction = async (context) => {
         author?: string;
         timestamp?: number;
         signature?: string | null;
+        replyTo?: string | null;
       };
-      const { content, author, timestamp, signature } = body;
+      const { content, author, timestamp, signature, replyTo } = body;
 
       if (!content || !author) {
         return new Response(
@@ -103,6 +144,17 @@ export const onRequest: PagesFunction = async (context) => {
         );
       }
 
+      // Validate replyTo if provided
+      if (replyTo) {
+        const parentPost = posts.find((p) => p.id === replyTo);
+        if (!parentPost) {
+          return new Response(
+            JSON.stringify({ error: "Parent post not found" }),
+            { status: 400, headers }
+          );
+        }
+      }
+
       const post: Post = {
         id: generateId(),
         content: content.trim(),
@@ -110,6 +162,7 @@ export const onRequest: PagesFunction = async (context) => {
         timestamp: timestamp || Date.now(),
         signature: signature || null,
         verified: !!signature,
+        replyTo: replyTo || null,
       };
 
       posts.push(post);
@@ -118,7 +171,10 @@ export const onRequest: PagesFunction = async (context) => {
         posts.shift();
       }
 
-      return new Response(JSON.stringify({ post }), { status: 201, headers });
+      return new Response(
+        JSON.stringify({ post: { ...post, replyCount: 0 } }),
+        { status: 201, headers }
+      );
     } catch (error) {
       return new Response(
         JSON.stringify({ error: "Failed to create post" }),

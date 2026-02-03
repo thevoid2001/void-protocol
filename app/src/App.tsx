@@ -17,6 +17,8 @@ import { FeedSourcesPage } from "./pages/FeedSources.tsx";
 import { FeedSavedPage } from "./pages/FeedSaved.tsx";
 import { FeedDiscoverPage } from "./pages/FeedDiscover.tsx";
 import { SocialPage } from "./pages/Social.tsx";
+import { SocialProfilePage } from "./pages/SocialProfile.tsx";
+import { SocialPostPage } from "./pages/SocialPost.tsx";
 
 // Check intro status synchronously to avoid flash
 function shouldShowIntro(): boolean {
@@ -70,6 +72,8 @@ function AppContent() {
           <Route path="/feed/sources" element={<FeedSourcesPage />} />
           <Route path="/feed/saved" element={<FeedSavedPage />} />
           <Route path="/social" element={<SocialPage />} />
+          <Route path="/social/post/:postId" element={<SocialPostPage />} />
+          <Route path="/social/:address" element={<SocialProfilePage />} />
         </Routes>
       </div>
     </div>
